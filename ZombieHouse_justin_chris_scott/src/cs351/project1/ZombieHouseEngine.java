@@ -28,6 +28,7 @@ public class ZombieHouseEngine implements Engine
   private final HashSet<Actor> UPDATE_ACTORS;  // only the actors that want to be updated each frame
   private boolean isInitialized = false;
   private boolean isPendingShutdown = false;
+  private Queue<Vector3> ghostMap = new LinkedList<Vector3>();
   
   // pendingLevelRestart and pendingNextLevel let the engine know if it needs to do something
   // after the current frame is finished
@@ -213,6 +214,7 @@ public class ZombieHouseEngine implements Engine
     double deltaSeconds = millisecondsSinceLastFrame / 1000.0; // used for the actors
     // update all actors and process their return statements
     getWorld().getPlayer().setNoClip(playerNoClip);
+    ghostMap.add(getWorld().getPlayer().getLocation());
     for (Actor actor : UPDATE_ACTORS)
     {
       processActorReturnStatement(actor.update(this, deltaSeconds));
