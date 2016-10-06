@@ -18,12 +18,14 @@ public class KeyboardInput
   private final String SHIFT = "shift";
 
   {
+    KEY_BOOLEAN_MAP.put(Keys.Q_KEY, false);
     KEY_BOOLEAN_MAP.put(Keys.W_KEY, false);
     KEY_BOOLEAN_MAP.put(Keys.A_KEY, false);
     KEY_BOOLEAN_MAP.put(Keys.S_KEY, false);
     KEY_BOOLEAN_MAP.put(Keys.D_KEY, false);
     KEY_BOOLEAN_MAP.put(Keys.SHIFT_KEY, false);
 
+    STRING_KEY_MAP.put("q", Keys.Q_KEY);
     STRING_KEY_MAP.put("w", Keys.W_KEY);
     STRING_KEY_MAP.put("a", Keys.A_KEY);
     STRING_KEY_MAP.put("s", Keys.S_KEY);
@@ -38,6 +40,7 @@ public class KeyboardInput
    */
   public enum Keys
   {
+    Q_KEY,
     W_KEY,
     A_KEY,
     S_KEY,

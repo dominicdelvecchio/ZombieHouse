@@ -26,6 +26,7 @@ public class ZombieHouseEngine implements Engine
   private int worldWidth, worldHeight;         // measured in tiles
   private final HashSet<Actor> ALL_ACTORS;
   private final HashSet<Actor> UPDATE_ACTORS;  // only the actors that want to be updated each frame
+  private final HashSet<Actor> KILLED_ACTORS;
   private boolean isInitialized = false;
   private boolean isPendingShutdown = false;
   private Queue<Vector3> ghostMap = new LinkedList<Vector3>();
@@ -76,6 +77,7 @@ public class ZombieHouseEngine implements Engine
   {
     ALL_ACTORS = new HashSet<>(500);
     UPDATE_ACTORS = new HashSet<>(500);
+    KILLED_ACTORS = new HashSet<>(500);
     keyInput = new KeyboardInput();
   }
 
@@ -245,12 +247,20 @@ public class ZombieHouseEngine implements Engine
         }
       }
     }
+    if(KILLED_ACTORS.size()>0){
+      removeActors();
+    }
     // render the world
     getRenderer().render(this, DrawMode.FILL, deltaSeconds);
     // if during the frame an actor(s) were added to the world, pull them now
     pullLatestActorsFromWorld();
     // with the frame complete, call initEngineState to see if anything needs to change
     initEngineState();
+  }
+
+  public void killZombie(Actor actor)
+  {
+    KILLED_ACTORS.add(actor);
   }
 
   private void windowClosed(WindowEvent event)
@@ -271,6 +281,29 @@ public class ZombieHouseEngine implements Engine
     soundEngine.shutdown();
     renderer.shutdown();
     collision.destroy();
+  }
+
+  private void removeActors()
+  {
+    int i = 0;
+    for(Actor actor : KILLED_ACTORS)
+    {
+      i++;
+      actor.destroy();
+      if(getWorld().contains(actor)){
+        getWorld().remove(actor);
+      }
+      if(UPDATE_ACTORS.contains(actor))
+      {
+        UPDATE_ACTORS.remove(actor);
+      }
+      if(ALL_ACTORS.contains(actor))
+      {
+        ALL_ACTORS.remove(actor);
+      }
+    }
+    KILLED_ACTORS.clear();
+    System.out.println(i + " zombies killed");
   }
 
   private void processActorReturnStatement(Actor.UpdateResult result)

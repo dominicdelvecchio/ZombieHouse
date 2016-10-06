@@ -236,6 +236,21 @@ public class Zombie extends Actor
     }   
   }
 
+  protected boolean isAttackable(Engine engine){
+    double playerX = (int)engine.getWorld().getPlayer().getLocation().getX();
+    double playerY = (int)engine.getWorld().getPlayer().getLocation().getY();
 
-  
+    double dx = playerX - getLocation().getX();
+    double dy = playerY - getLocation().getY();
+    double distanceToPlayer = (int)(Math.sqrt(dx*dx + dy*dy));
+
+    if (distanceToPlayer <= 1)
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
 }

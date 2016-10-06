@@ -10,6 +10,7 @@ package cs351.entities;
 import cs351.core.Engine;
 import cs351.core.GlobalConstants;
 import cs351.core.Vector3;
+import cs351.project1.ZombieHouseEngine;
 import javafx.geometry.Point2D;
 import java.util.Random;
 
@@ -22,8 +23,8 @@ public class RandomWalkZombie extends Zombie {
   private double xDirection = 0;
   private double yDirection = 0;
   private Vector3 directionXY = new Vector3(0.0);
-
-
+  private double startingHealth = -1.0;
+  private double currentHealth;
 
   public RandomWalkZombie(String textureFile, double x, double y, int width, int height, int depth)
   {
@@ -79,10 +80,29 @@ public class RandomWalkZombie extends Zombie {
         if (xDirection == 0.0 && yDirection != 0.0) yDirection = yDirection < 0.0 ? -1.0 : 1.0;
         else if (yDirection != 0.0) yDirection = yDirection < 0.0 ? -0.5 : 0.5;
         directionXY.set(xDirection, yDirection, 0.0);
-        lookAt(engine.getWorld().getPlayer().getLocation().getX(), engine.getWorld().getPlayer().getLocation().getY());
         ((MasterZombie)engine.getWorld().getMasterZombie()).detectPlayer();
       }
+    }
 
+    if(canSmellPlayer(engine))
+    {
+      lookAt(engine.getWorld().getPlayer().getLocation().getX(), engine.getWorld().getPlayer().getLocation().getY());
+    }
+
+    if(startingHealth < 0.0)
+    {
+      startingHealth = 20;
+      currentHealth = startingHealth;
+    }
+
+    if(((Player) engine.getWorld().getPlayer()).attacking() && isAttackable(engine))
+    {
+      currentHealth -= 10.0 * deltaSeconds;
+    }
+
+    if(currentHealth <= 0)
+    {
+      ((ZombieHouseEngine) engine).killZombie(this);
     }
 
     double totalSpeed = zombieSpeed * deltaSeconds;

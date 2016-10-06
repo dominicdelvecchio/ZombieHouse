@@ -10,6 +10,7 @@ import java.util.Random;
 import cs351.core.Engine;
 import cs351.core.GlobalConstants;
 import javafx.geometry.Point2D;
+import cs351.project1.ZombieHouseEngine;
 
 
 public class LineWalkZombie extends Zombie {
@@ -18,6 +19,8 @@ public class LineWalkZombie extends Zombie {
   private Random rand = new Random();
   private double xDirection = 0.5;
   private double yDirection = 0.5;
+  private double startingHealth = -1.0;
+  private double currentHealth;
 
   public LineWalkZombie(String textureFile, double x, double y, int width, int height, int depth)
   {
@@ -68,15 +71,33 @@ public class LineWalkZombie extends Zombie {
         else if (xDirection != 0.0) xDirection = xDirection < 0.0 ? -0.5 : 0.5;
         if (xDirection == 0.0 && yDirection != 0.0) yDirection = yDirection < 0.0 ? -1.0 : 1.0;
         else if (yDirection != 0.0) yDirection = yDirection < 0.0 ? -0.5 : 0.5;
-        lookAt(engine.getWorld().getPlayer().getLocation().getX(), engine.getWorld().getPlayer().getLocation().getY());
         // alert the master zombie
         ((MasterZombie)engine.getWorld().getMasterZombie()).detectPlayer();
       }
-
-
-
     }
-    //directionXY.set(.7, -0.7, 0.0);
+
+    if(canSmellPlayer(engine))
+    {
+      lookAt(engine.getWorld().getPlayer().getLocation().getX(), engine.getWorld().getPlayer().getLocation().getY());
+      rotation.setAngle(rotation.getAngle()+180);
+    }
+
+    if(startingHealth < 0.0)
+    {
+      startingHealth = 20;
+      currentHealth = startingHealth;
+    }
+
+    if(((Player) engine.getWorld().getPlayer()).attacking() && isAttackable(engine))
+    {
+      currentHealth -= 10.0 * deltaSeconds;
+    }
+
+    if(currentHealth <= 0)
+    {
+      ((ZombieHouseEngine) engine).killZombie(this);
+    }
+
     double totalSpeed = zombieSpeed * deltaSeconds;
     setLocation(getLocation().getX() + xDirection * totalSpeed,
                 getLocation().getY() + yDirection * totalSpeed);

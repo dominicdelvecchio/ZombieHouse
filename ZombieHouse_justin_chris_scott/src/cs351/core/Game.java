@@ -9,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.*;
 import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -24,10 +23,7 @@ public class Game extends Application {
 
 
   @FXML private Button playButton;
-  @FXML private  AnchorPane ZombieHouseAnchorPane;
-  @FXML private StackPane zombieHouseScrollPane;
   @FXML public static Text gameTitle;
-  @FXML private Text gameTitle2;
   @FXML public static Text stamina;
   private AnimationTimer timer = new MyTimer();
   private boolean started=true;
@@ -134,7 +130,7 @@ public class Game extends Application {
 
         if (Game.stamina != null)
         {
-          Game.stamina.setText("Stamina: " + currStamina + "  Health:" + currHealth);
+          Game.stamina.setText(String.format("Stamina: %.2f  Health: %.2f", currStamina, currHealth));
         }
       }
       engine.frame();

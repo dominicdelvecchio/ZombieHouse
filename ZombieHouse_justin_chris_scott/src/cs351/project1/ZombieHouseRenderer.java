@@ -144,6 +144,10 @@ public class ZombieHouseRenderer implements Renderer
       KeyboardInput keyInput = engine.getKeyInputSystem();
       double playerSpeed = SPEED;
 
+      if(keyInput.isKeyPressed(KeyboardInput.Keys.Q_KEY)){
+        player.attack();
+      }
+
       // Deal with forward/backward movement
       if (keyInput.isKeyPressed(KeyboardInput.Keys.W_KEY))
       {
@@ -412,7 +416,11 @@ public class ZombieHouseRenderer implements Renderer
                                       0.0,
                                       actor.getLocation().getY());
     model.rotation = new Rotate(0.0, 0.0, 0.0);
-    //model.rotation = actor.getRotation();
+
+    if(actor.shouldUpdate()){
+      model.rotation = actor.getRotation();
+    }
+
     if (shape != null)
     {
       shape.setRotationAxis(new Point3D(0.0, 1.0, 0.0));

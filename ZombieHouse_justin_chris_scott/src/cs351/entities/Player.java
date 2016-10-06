@@ -35,6 +35,7 @@ public class Player extends Actor
   private double stepSoundTimer = 0.0;
   private boolean rightFoot = false;
   private int numAttackingZombies = 0;
+  private boolean isAttacking = false;
 
   public Player(double x, double y, int height)
   {
@@ -101,6 +102,15 @@ public class Player extends Actor
   public void collided(Engine engine, Actor actor)
   {
     if (actor instanceof Zombie) ++numAttackingZombies;
+  }
+
+  public void attack()
+  {
+    isAttacking = true;
+  }
+
+  public boolean attacking(){
+    return isAttacking;
   }
 
   public void setForwardSpeedX(double speedX)
