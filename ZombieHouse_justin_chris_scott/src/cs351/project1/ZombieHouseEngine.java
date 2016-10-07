@@ -29,7 +29,7 @@ public class ZombieHouseEngine implements Engine
   private final HashSet<Actor> KILLED_ACTORS;
   private boolean isInitialized = false;
   private boolean isPendingShutdown = false;
-  private Queue<Vector3> ghostMap = new LinkedList<Vector3>();
+  private LinkedList<Vector3> ghostMap = new LinkedList<Vector3>();
   
   // pendingLevelRestart and pendingNextLevel let the engine know if it needs to do something
   // after the current frame is finished
@@ -275,7 +275,7 @@ public class ZombieHouseEngine implements Engine
 
   private void invalidateEngineData()
   {
-    for (Actor actor : ALL_ACTORS) actor.destroy();
+    //for (Actor actor : ALL_ACTORS) actor.destroy();
     ALL_ACTORS.clear();
     UPDATE_ACTORS.clear();
     soundEngine.shutdown();

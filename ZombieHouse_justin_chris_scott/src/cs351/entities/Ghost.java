@@ -15,10 +15,11 @@ import java.util.Queue;
 //Players previous location vectors to guid movement.
 public class Ghost extends Actor
 {
-  public Ghost(String textureFile, String modelFile, LinkedList<Vector3> ghostMap, double x, double y)
+  public Ghost(String textureFile, String modelFile, LinkedList<Vector3> ghostMap, double x, double y, int width, int height, int depth)
   {
     super(textureFile, modelFile);
     setLocation(x, y);
+    setWidthHeightDepth(width, height, depth);
   }
   
   @Override
