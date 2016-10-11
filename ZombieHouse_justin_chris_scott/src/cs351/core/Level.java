@@ -1,5 +1,10 @@
 package cs351.core;
 
+import cs351.entities.RandomLevelGenerator;
+
+import java.util.HashMap;
+import java.util.HashSet;
+
 /**
  * A Level object represents the initial state of a World. When a
  * call to reset is made, a Level should clear the contents of the
@@ -23,4 +28,8 @@ public interface Level
    * it is holding onto.
    */
   void destroy();
+  
+ public HashMap<Vector3, HashSet<Actor>> getDynamicActorLocations();
+  
+ public  RandomLevelGenerator getRandomLevelGenerator();
 }

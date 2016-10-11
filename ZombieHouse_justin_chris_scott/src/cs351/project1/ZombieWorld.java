@@ -245,6 +245,10 @@ public class ZombieWorld implements World
     }
   }
 
+  public Level getCurrentLevel()
+  {
+    return this.currLevel;
+  }
   /**
    * This function is called when the Engine wants to restart the same level over
    * again.

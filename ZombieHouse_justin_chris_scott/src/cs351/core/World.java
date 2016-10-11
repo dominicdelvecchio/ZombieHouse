@@ -161,4 +161,7 @@ public interface World
    *               separate lists to improve its performance/the renderer's performance
    */
   void restartLevel(Engine engine);
+  
+  
+  Level getCurrentLevel();
 }

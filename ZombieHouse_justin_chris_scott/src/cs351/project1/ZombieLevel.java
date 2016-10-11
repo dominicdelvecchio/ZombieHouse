@@ -271,6 +271,14 @@ public class ZombieLevel implements Level
     world.add(player);
   }
 
+  public HashMap<Vector3, HashSet<Actor>> getDynamicActorLocations()
+  {
+    return DYNAMIC_ACTOR_LOCATIONS;
+  }
+  public RandomLevelGenerator getRandomLevelGenerator()
+  {
+    return LEVEL_GENERATOR;
+  }
   /**
    * Initializes the master zombie
    * and sets a randon (x,y) location for
