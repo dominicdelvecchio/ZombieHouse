@@ -26,6 +26,9 @@ public class ZombieWorld implements World
   private int tilePixelHeight = 1;
   private Actor player;
   private Actor masterZombie;
+  private Actor Ghost1;
+  private Actor Ghost2;
+  private Actor Ghost3;
   private HashSet<Actor> changeList = new HashSet<Actor>(50);
   private HashSet<Actor> actors = new HashSet<>();
   private LinkedList<Level> levels = new LinkedList<>(); //maintain order
@@ -177,6 +180,13 @@ public class ZombieWorld implements World
   {
     return masterZombie;
   }
+  
+  public Actor getGhost(int ghostNum)
+  {
+    if(ghostNum == 1) return Ghost1;
+    else if(ghostNum == 2) return Ghost2;
+    else return Ghost3;
+  }
 
   @Override
   public void setMasterZombie(Actor masterZombie)
@@ -193,6 +203,14 @@ public class ZombieWorld implements World
   public void setPlayer(Actor player) throws RuntimeException
   {
     this.player = player;
+  }
+  
+  public void setGhost(int ghostNum, Actor ghost)
+  {
+    if(ghostNum == 1) this.Ghost1 = ghost;
+    if(ghostNum == 2) this.Ghost2 = ghost;
+    if(ghostNum == 3) this.Ghost3 = ghost;
+    
   }
 
   public Collection<Actor> getChangeList(boolean clearChangeList)
