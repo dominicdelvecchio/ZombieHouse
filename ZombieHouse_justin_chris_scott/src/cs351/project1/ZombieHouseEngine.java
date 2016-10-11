@@ -1,6 +1,7 @@
 package cs351.project1;
 
 import cs351.core.*;
+import cs351.entities.Ghost;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -338,7 +339,26 @@ public class ZombieHouseEngine implements Engine
     collision = new CollisionDetection(this);
     // queue up the next level/restart the current level
     if (shouldGetNextLevel) getWorld().nextLevel(this);
-    else getWorld().restartLevel(this);
+    else
+      {
+        Ghost ghost = new Ghost("textures/ice_texture.jpg", "resources/Zombie2_Animated.txt",ghostMap,
+                getWorld().getCurrentLevel().getRandomLevelGenerator().getXSpawnPoint(), getWorld().getCurrentLevel().getRandomLevelGenerator().getYSpawnPoint(),1,1,1);
+        
+        getWorld().add(ghost);
+        Vector3 location = new Vector3
+                (getWorld().getCurrentLevel().getRandomLevelGenerator().getXSpawnPoint(), getWorld().getCurrentLevel().getRandomLevelGenerator().getYSpawnPoint(), 0);
+        getWorld().getCurrentLevel().getDynamicActorLocations().put(location, new HashSet<>());
+        getWorld().getCurrentLevel().getDynamicActorLocations().get(location).add(ghost);
+        ALL_ACTORS.add(ghost);
+        UPDATE_ACTORS.add(ghost);
+        //renderer.registerActor(ghost,);
+        //if(getWorld().contains(ghost)) System.out.println("true ye true");
+        getWorld().restartLevel(this);
+        
+        
+        
+    }
+      
 
     pullLatestActorsFromWorld();
     // the +1 accounts for it truncating values after the decimal when the
