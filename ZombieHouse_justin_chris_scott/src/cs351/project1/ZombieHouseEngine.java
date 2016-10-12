@@ -30,7 +30,10 @@ public class ZombieHouseEngine implements Engine
   private final HashSet<Actor> KILLED_ACTORS;
   private boolean isInitialized = false;
   private boolean isPendingShutdown = false;
-  private LinkedList<Vector3> ghostMap = new LinkedList<Vector3>();
+  private LinkedList<Vector3> ghostMap1 = new LinkedList<Vector3>();
+  private LinkedList<Vector3> ghostMap2 = new LinkedList<Vector3>();
+  private LinkedList<Vector3> ghostMap3 = new LinkedList<Vector3>();
+  int ghostCount = 0;
   
   // pendingLevelRestart and pendingNextLevel let the engine know if it needs to do something
   // after the current frame is finished
@@ -217,7 +220,7 @@ public class ZombieHouseEngine implements Engine
     double deltaSeconds = millisecondsSinceLastFrame / 1000.0; // used for the actors
     // update all actors and process their return statements
     getWorld().getPlayer().setNoClip(playerNoClip);
-    ghostMap.add(getWorld().getPlayer().getLocation());
+    ghostMap1.add(getWorld().getPlayer().getLocation());
     for (Actor actor : UPDATE_ACTORS)
     {
       processActorReturnStatement(actor.update(this, deltaSeconds));
@@ -341,7 +344,7 @@ public class ZombieHouseEngine implements Engine
     if (shouldGetNextLevel) getWorld().nextLevel(this);
     else
       {
-        Ghost ghost = new Ghost("textures/ice_texture.jpg", "resources/Zombie2_Animated.txt",ghostMap,
+        Ghost ghost = new Ghost("textures/ice_texture.jpg", "resources/Zombie2_Animated.txt",ghostMap1,
                 getWorld().getCurrentLevel().getRandomLevelGenerator().getXSpawnPoint(), getWorld().getCurrentLevel().getRandomLevelGenerator().getYSpawnPoint(),1,1,1);
         
         getWorld().add(ghost);
