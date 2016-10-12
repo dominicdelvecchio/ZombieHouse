@@ -34,6 +34,7 @@ public class ZombieHouseEngine implements Engine
   private LinkedList<Vector3> ghostMap2 = new LinkedList<Vector3>();
   private LinkedList<Vector3> ghostMap3 = new LinkedList<Vector3>();
   int ghostCount = 0;
+  int ghostMovement;
   
   // pendingLevelRestart and pendingNextLevel let the engine know if it needs to do something
   // after the current frame is finished
@@ -153,6 +154,33 @@ public class ZombieHouseEngine implements Engine
   {
     return pathingData;
   }
+  
+  private void ghostBehvior(int ghostCount)
+  {
+    double x;
+    double y;
+    if(ghostCount == 0) ghostMap1.add(getWorld().getPlayer().getLocation());
+    else if(ghostCount ==1)
+    {
+      x = ghostMap1.get(ghostMovement).getX();
+      y = ghostMap1.get(ghostMovement).getY();
+      
+      ghostMap2.add(getWorld().getPlayer().getLocation());
+      
+    }
+  }
+  
+  private void initializeGhost (int ghostCount)
+  {
+    if(ghostCount == 0)
+    {
+      Ghost ghost = new Ghost("textures/ice_texture.jpg", "resources/Zombie2_Animated.txt",ghostMap1,
+              getWorld().getCurrentLevel().getRandomLevelGenerator().getXSpawnPoint(), getWorld().getCurrentLevel().getRandomLevelGenerator().getYSpawnPoint(),1,1,1);
+      getWorld().setGhost(ghostCount, ghost);
+      ALL_ACTORS.add(ghost);
+      UPDATE_ACTORS.add(ghost);
+    }
+  }
 
   @Override
   public void init(Stage stage, World world, SoundEngine soundEngine, Renderer renderer)
@@ -220,7 +248,8 @@ public class ZombieHouseEngine implements Engine
     double deltaSeconds = millisecondsSinceLastFrame / 1000.0; // used for the actors
     // update all actors and process their return statements
     getWorld().getPlayer().setNoClip(playerNoClip);
-    ghostMap1.add(getWorld().getPlayer().getLocation());
+    ghostBehvior(ghostCount);
+    //ghostMap1.add(getWorld().getPlayer().getLocation());
     for (Actor actor : UPDATE_ACTORS)
     {
       processActorReturnStatement(actor.update(this, deltaSeconds));
@@ -344,16 +373,14 @@ public class ZombieHouseEngine implements Engine
     if (shouldGetNextLevel) getWorld().nextLevel(this);
     else
       {
-        Ghost ghost = new Ghost("textures/ice_texture.jpg", "resources/Zombie2_Animated.txt",ghostMap1,
-                getWorld().getCurrentLevel().getRandomLevelGenerator().getXSpawnPoint(), getWorld().getCurrentLevel().getRandomLevelGenerator().getYSpawnPoint(),1,1,1);
-        
-        getWorld().add(ghost);
+        initializeGhost(ghostCount);
+        ghostCount++;
+        /*getWorld().add(ghost);
         Vector3 location = new Vector3
                 (getWorld().getCurrentLevel().getRandomLevelGenerator().getXSpawnPoint(), getWorld().getCurrentLevel().getRandomLevelGenerator().getYSpawnPoint(), 0);
         getWorld().getCurrentLevel().getDynamicActorLocations().put(location, new HashSet<>());
         getWorld().getCurrentLevel().getDynamicActorLocations().get(location).add(ghost);
-        ALL_ACTORS.add(ghost);
-        UPDATE_ACTORS.add(ghost);
+        */
         //renderer.registerActor(ghost,);
         //if(getWorld().contains(ghost)) System.out.println("true ye true");
         getWorld().restartLevel(this);
