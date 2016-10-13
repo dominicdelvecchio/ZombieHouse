@@ -61,6 +61,6 @@ public class Ghost extends Actor
   {
     
   }
-  
+   public void setMove(int move){this.move = move;}
   
 }

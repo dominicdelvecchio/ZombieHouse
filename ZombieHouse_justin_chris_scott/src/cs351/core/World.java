@@ -1,5 +1,7 @@
 package cs351.core;
 
+import cs351.entities.Ghost;
+
 import java.util.Collection;
 
 /**
@@ -164,4 +166,8 @@ public interface World
   
   
   Level getCurrentLevel();
+  
+  void setGhost(int ghostCount, Ghost ghost);
+  
+  Ghost getGhost(int i);
 }
