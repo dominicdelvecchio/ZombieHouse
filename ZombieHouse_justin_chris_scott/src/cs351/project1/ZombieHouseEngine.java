@@ -2,6 +2,7 @@ package cs351.project1;
 
 import cs351.core.*;
 import cs351.entities.Ghost;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -30,8 +31,8 @@ public class ZombieHouseEngine implements Engine
   private final HashSet<Actor> KILLED_ACTORS;
   private boolean isInitialized = false;
   private boolean isPendingShutdown = false;
-  private LinkedList<Vector3> ghostMap1 = new LinkedList<Vector3>();
-  private LinkedList<Vector3> ghostMap2 = new LinkedList<Vector3>();
+  private LinkedList<Double> ghostMapX = new LinkedList<Double>();
+  private LinkedList<Double> ghostMapY = new LinkedList<Double>();
   private LinkedList<Vector3> ghostMap3 = new LinkedList<Vector3>();
   int ghostCount = 0;
   int ghostMovement = 0;
@@ -155,24 +156,31 @@ public class ZombieHouseEngine implements Engine
     return pathingData;
   }
   
-  private void ghostBehvior(int ghostCount)
+  /*private void ghostBehvior(int ghostCount)
   {
     if(ghostCount == 0)
     {
       ghostMap1.add(getWorld().getPlayer().getLocation());
+      System.out.println("Player XLocation = " + getWorld().getPlayer().getLocation().getX());
+      System.out.println("Player YLocation = " + getWorld().getPlayer().getLocation().getY());
       ghostMovement++;
     }
-  }
+  }*/
   
   private void initializeGhost (int ghostCount)
   {
     if(ghostCount == 0)
     {
-      Ghost ghost = new Ghost("textures/ice_texture.jpg", "resources/Zombie2_Animated.txt",ghostMap1,
+      Ghost ghost = new Ghost("textures/ice_texture.jpg", "resources/Zombie2_Animated.txt",ghostMapX,ghostMapY,
               getWorld().getCurrentLevel().getRandomLevelGenerator().getXSpawnPoint(), getWorld().getCurrentLevel().getRandomLevelGenerator().getYSpawnPoint(),1,1,1, ghostMovement);
       getWorld().setGhost(ghostCount, ghost);
       ALL_ACTORS.add(ghost);
       UPDATE_ACTORS.add(ghost);
+      getRenderer().registerActor(ghost,
+              ghost.getRenderEntity(),
+              Color.BEIGE, // diffuse
+              Color.BEIGE, // specular
+              Color.WHITE); // ambient
     }
   }
 
@@ -242,8 +250,10 @@ public class ZombieHouseEngine implements Engine
     double deltaSeconds = millisecondsSinceLastFrame / 1000.0; // used for the actors
     // update all actors and process their return statements
     getWorld().getPlayer().setNoClip(playerNoClip);
-    ghostBehvior(ghostCount);
-    
+    //ghostBehvior(ghostCount);
+    ghostMapX.add(getWorld().getPlayer().getLocation().getX());
+    ghostMapY.add(getWorld().getPlayer().getLocation().getY());
+    ghostMovement++;
     for (Actor actor : UPDATE_ACTORS)
     {
       processActorReturnStatement(actor.update(this, deltaSeconds));
