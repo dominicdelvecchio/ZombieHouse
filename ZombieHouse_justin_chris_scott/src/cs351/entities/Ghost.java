@@ -15,7 +15,8 @@ import java.util.Queue;
 //Players previous location vectors to guid movement.
 public class Ghost extends Actor
 {
-  private LinkedList<Vector3> ghostMap;
+  private LinkedList ghostMapX;
+  private LinkedList ghostMapY;
   private int ghostMovement;
   private int move = 0;
   
@@ -23,10 +24,11 @@ public class Ghost extends Actor
   {
     super(textureFile);
   }
-  public Ghost(String textureFile, String modelFile, LinkedList<Vector3> ghostMap, double x, double y, int width, int height, int depth, int ghostMovement)
+  public Ghost(String textureFile, String modelFile, LinkedList<Double> ghostMapX, LinkedList<Double> ghostMapY, double x, double y, int width, int height, int depth, int ghostMovement)
   {
     super(textureFile, modelFile);
-    this.ghostMap = ghostMap;
+    this.ghostMapX = ghostMapX;
+    this.ghostMapY = ghostMapY;
     this.ghostMovement = ghostMovement;
     setLocation(x, y);
     setWidthHeightDepth(width, height, depth);
@@ -40,8 +42,10 @@ public class Ghost extends Actor
     
     if(move < ghostMovement)
     {
-      x = ghostMap.get(move).getX();
-      y = ghostMap.get(move).getY();
+      x = (double) ghostMapX.get(move);
+      y = (double) ghostMapY.get(move);
+      //System.out.println("x = " +x+ " and y = " + y);
+      //System.out.println("move = " +move);
       setLocation(x,y);
       move++;
     }
