@@ -211,18 +211,30 @@ public class ZombieWorld implements World
     if(ghostNum == 0)
     {
       this.Ghost1 = ghost;
-      add(ghost);
+      add(Ghost1);
       Vector3 location = new Vector3
               (getCurrentLevel().getRandomLevelGenerator().getXSpawnPoint(),getCurrentLevel().getRandomLevelGenerator().getYSpawnPoint(), 0);
       getCurrentLevel().getDynamicActorLocations().put(location, new HashSet<>());
-      getCurrentLevel().getDynamicActorLocations().get(location).add(ghost);
-      
-      
-      
-      
+      getCurrentLevel().getDynamicActorLocations().get(location).add(Ghost1);
     }
-    if(ghostNum == 2) this.Ghost2 = ghost;
-    if(ghostNum == 3) this.Ghost3 = ghost;
+    if(ghostNum == 1)
+    {
+      this.Ghost2 = ghost;
+      add(Ghost2);
+      Vector3 location = new Vector3
+              (getCurrentLevel().getRandomLevelGenerator().getXSpawnPoint(),getCurrentLevel().getRandomLevelGenerator().getYSpawnPoint(), 0);
+      getCurrentLevel().getDynamicActorLocations().put(location, new HashSet<>());
+      getCurrentLevel().getDynamicActorLocations().get(location).add(Ghost2);
+    }
+    if(ghostNum == 2)
+    {
+      this.Ghost3 = ghost;
+      add(Ghost3);
+      Vector3 location = new Vector3
+              (getCurrentLevel().getRandomLevelGenerator().getXSpawnPoint(),getCurrentLevel().getRandomLevelGenerator().getYSpawnPoint(), 0);
+      getCurrentLevel().getDynamicActorLocations().put(location, new HashSet<>());
+      getCurrentLevel().getDynamicActorLocations().get(location).add(Ghost3);
+    }
     
   }
 
