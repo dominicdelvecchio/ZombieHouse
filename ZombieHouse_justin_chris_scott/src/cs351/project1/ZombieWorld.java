@@ -218,6 +218,8 @@ public class ZombieWorld implements World
       getCurrentLevel().getDynamicActorLocations().get(location).add(ghost);
       
       
+      
+      
     }
     if(ghostNum == 2) this.Ghost2 = ghost;
     if(ghostNum == 3) this.Ghost3 = ghost;
