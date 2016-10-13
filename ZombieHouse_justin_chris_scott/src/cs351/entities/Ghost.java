@@ -53,7 +53,7 @@ public class Ghost extends Actor
     }
     else
     {
-      System.out.println("done");
+      setLocation(500,500);
     }
     return UpdateResult.UPDATE_COMPLETED;
   }
