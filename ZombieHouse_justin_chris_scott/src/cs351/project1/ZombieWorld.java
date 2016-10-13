@@ -1,6 +1,7 @@
 package cs351.project1;
 import cs351.core.*;
 import cs351.entities.Exit;
+import cs351.entities.Ghost;
 import cs351.entities.Player;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Box;
@@ -26,9 +27,9 @@ public class ZombieWorld implements World
   private int tilePixelHeight = 1;
   private Actor player;
   private Actor masterZombie;
-  private Actor Ghost1;
-  private Actor Ghost2;
-  private Actor Ghost3;
+  private Ghost Ghost1;
+  private Ghost Ghost2;
+  private Ghost Ghost3;
   private HashSet<Actor> changeList = new HashSet<Actor>(50);
   private HashSet<Actor> actors = new HashSet<>();
   private LinkedList<Level> levels = new LinkedList<>(); //maintain order
@@ -181,7 +182,7 @@ public class ZombieWorld implements World
     return masterZombie;
   }
   
-  public Actor getGhost(int ghostNum)
+  public Ghost getGhost(int ghostNum)
   {
     if(ghostNum == 1) return Ghost1;
     else if(ghostNum == 2) return Ghost2;
@@ -205,9 +206,19 @@ public class ZombieWorld implements World
     this.player = player;
   }
   
-  public void setGhost(int ghostNum, Actor ghost)
+  public void setGhost(int ghostNum, Ghost ghost)
   {
-    if(ghostNum == 1) this.Ghost1 = ghost;
+    if(ghostNum == 0)
+    {
+      this.Ghost1 = ghost;
+      add(ghost);
+      Vector3 location = new Vector3
+              (getCurrentLevel().getRandomLevelGenerator().getXSpawnPoint(),getCurrentLevel().getRandomLevelGenerator().getYSpawnPoint(), 0);
+      getCurrentLevel().getDynamicActorLocations().put(location, new HashSet<>());
+      getCurrentLevel().getDynamicActorLocations().get(location).add(ghost);
+      
+      
+    }
     if(ghostNum == 2) this.Ghost2 = ghost;
     if(ghostNum == 3) this.Ghost3 = ghost;
     
