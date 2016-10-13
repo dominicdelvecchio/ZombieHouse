@@ -34,7 +34,7 @@ public class ZombieHouseEngine implements Engine
   private LinkedList<Vector3> ghostMap2 = new LinkedList<Vector3>();
   private LinkedList<Vector3> ghostMap3 = new LinkedList<Vector3>();
   int ghostCount = 0;
-  int ghostMovement;
+  int ghostMovement = 0;
   
   // pendingLevelRestart and pendingNextLevel let the engine know if it needs to do something
   // after the current frame is finished
@@ -157,16 +157,10 @@ public class ZombieHouseEngine implements Engine
   
   private void ghostBehvior(int ghostCount)
   {
-    double x;
-    double y;
-    if(ghostCount == 0) ghostMap1.add(getWorld().getPlayer().getLocation());
-    else if(ghostCount ==1)
+    if(ghostCount == 0)
     {
-      x = ghostMap1.get(ghostMovement).getX();
-      y = ghostMap1.get(ghostMovement).getY();
-      
-      ghostMap2.add(getWorld().getPlayer().getLocation());
-      
+      ghostMap1.add(getWorld().getPlayer().getLocation());
+      ghostMovement++;
     }
   }
   
@@ -175,7 +169,7 @@ public class ZombieHouseEngine implements Engine
     if(ghostCount == 0)
     {
       Ghost ghost = new Ghost("textures/ice_texture.jpg", "resources/Zombie2_Animated.txt",ghostMap1,
-              getWorld().getCurrentLevel().getRandomLevelGenerator().getXSpawnPoint(), getWorld().getCurrentLevel().getRandomLevelGenerator().getYSpawnPoint(),1,1,1);
+              getWorld().getCurrentLevel().getRandomLevelGenerator().getXSpawnPoint(), getWorld().getCurrentLevel().getRandomLevelGenerator().getYSpawnPoint(),1,1,1, ghostMovement);
       getWorld().setGhost(ghostCount, ghost);
       ALL_ACTORS.add(ghost);
       UPDATE_ACTORS.add(ghost);
@@ -249,7 +243,7 @@ public class ZombieHouseEngine implements Engine
     // update all actors and process their return statements
     getWorld().getPlayer().setNoClip(playerNoClip);
     ghostBehvior(ghostCount);
-    //ghostMap1.add(getWorld().getPlayer().getLocation());
+    
     for (Actor actor : UPDATE_ACTORS)
     {
       processActorReturnStatement(actor.update(this, deltaSeconds));
@@ -375,6 +369,7 @@ public class ZombieHouseEngine implements Engine
       {
         initializeGhost(ghostCount);
         ghostCount++;
+        ghostMovement = 0;
         /*getWorld().add(ghost);
         Vector3 location = new Vector3
                 (getWorld().getCurrentLevel().getRandomLevelGenerator().getXSpawnPoint(), getWorld().getCurrentLevel().getRandomLevelGenerator().getYSpawnPoint(), 0);
