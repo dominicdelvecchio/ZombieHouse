@@ -6,6 +6,7 @@ package cs351.entities;
  * @author Scott Cooper
  */
 
+import java.util.LinkedList;
 import java.util.Random;
 import cs351.core.Engine;
 import cs351.core.GlobalConstants;
@@ -21,6 +22,11 @@ public class LineWalkZombie extends Zombie {
   private double yDirection = 0.5;
   private double startingHealth = -1.0;
   private double currentHealth;
+  private boolean metPlayer = false;
+  private boolean zombieMemory = false;
+  private boolean died = false;
+  private LinkedList zombieMapX;
+  private LinkedList zombieMapY;
 
   public LineWalkZombie(String textureFile, double x, double y, int width, int height, int depth)
   {
@@ -63,6 +69,7 @@ public class LineWalkZombie extends Zombie {
       }
       else if (canSmellPlayer(engine))
       {
+        metPlayer = true;
         setNewDirection = false;
         Point2D pt = super.PathfindToThePlayer(engine);
         xDirection = pt.getX();
