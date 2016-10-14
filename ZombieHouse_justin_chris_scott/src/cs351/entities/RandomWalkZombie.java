@@ -15,16 +15,15 @@ import javafx.geometry.Point2D;
 import java.util.Random;
 
 
-public class RandomWalkZombie extends Zombie {
-  
+public class RandomWalkZombie extends Zombie
+{
+
   // initialize to something we set
-  private double elapsedSeconds=0;
+  private double elapsedSeconds = 0;
   private Random rand = new Random();
   private double xDirection = 0;
   private double yDirection = 0;
   private Vector3 directionXY = new Vector3(0.0);
-  private double startingHealth = -1.0;
-  private double currentHealth;
 
   public RandomWalkZombie(String textureFile, double x, double y, int width, int height, int depth)
   {
@@ -39,82 +38,104 @@ public class RandomWalkZombie extends Zombie {
   /**
    * Parameters are given from the Engine so that the appropriate
    * updates can be made
+   *
    * @param engine
    * @param deltaSeconds
    */
   public UpdateResult update(Engine engine, double deltaSeconds)
   {
-
-    // totalSpeed represents the movement speed offset in tiles per second
-    elapsedSeconds += deltaSeconds;
-    double zombieSpeed = Double.parseDouble(engine.getSettings().getValue("zombie_speed"));
-    // every zombieDecisionRate seconds, switch direction
-    if (elapsedSeconds > GlobalConstants.zombieDecisionRate)
+    if(shouldUpdate)
     {
-   
-      elapsedSeconds = 0.0;
-      if (!canSmellPlayer(engine))
+      // totalSpeed represents the movement speed offset in tiles per second
+      elapsedSeconds += deltaSeconds;
+      double zombieSpeed = Double.parseDouble(engine.getSettings().getValue("zombie_speed"));
+      // every zombieDecisionRate seconds, switch direction
+      if(elapsedSeconds > GlobalConstants.zombieDecisionRate)
       {
-        // If the x/y directions are positive and set new direction is true,
-        // it means that with the current heading the zombie collided with something,
-        // so make the new direction be negative to get away from whatever we collided with
-        boolean shouldChooseNegativeX = xDirection > 0.0 && setNewDirection;
-        boolean shouldChooseNegativeY = yDirection > 0.0 && setNewDirection;
-        xDirection = rand.nextDouble();
-        yDirection = 1.0 - xDirection;
-        // If shouldChooseNegativeX/Y are true, the zombie is forced to make the heading
-        // choice negative - otherwise it makes it a random choice
-        if (shouldChooseNegativeX) xDirection = -xDirection;
-        else if (rand.nextInt(100) >= 50) xDirection = -xDirection;
-        if (shouldChooseNegativeY) yDirection = -yDirection;
-        else if (rand.nextInt(100) >= 50) yDirection = -yDirection;
-        directionXY.set(xDirection, yDirection, 0.0);
-      } 
-      else
-      {
-        Point2D pt = super.PathfindToThePlayer(engine);
-        xDirection = pt.getX();
-        yDirection = pt.getY();
-        if (yDirection == 0.0 && xDirection != 0.0) xDirection = xDirection < 0.0 ? -1.0 : 1.0;
-        else if (xDirection != 0.0) xDirection = xDirection < 0.0 ? -0.5 : 0.5;
-        if (xDirection == 0.0 && yDirection != 0.0) yDirection = yDirection < 0.0 ? -1.0 : 1.0;
-        else if (yDirection != 0.0) yDirection = yDirection < 0.0 ? -0.5 : 0.5;
-        directionXY.set(xDirection, yDirection, 0.0);
-        ((MasterZombie)engine.getWorld().getMasterZombie()).detectPlayer();
+
+        elapsedSeconds = 0.0;
+        if(!canSmellPlayer(engine))
+        {
+          // If the x/y directions are positive and set new direction is true,
+          // it means that with the current heading the zombie collided with something,
+          // so make the new direction be negative to get away from whatever we collided with
+          boolean shouldChooseNegativeX = xDirection > 0.0 && setNewDirection;
+          boolean shouldChooseNegativeY = yDirection > 0.0 && setNewDirection;
+          xDirection = rand.nextDouble();
+          yDirection = 1.0 - xDirection;
+          // If shouldChooseNegativeX/Y are true, the zombie is forced to make the heading
+          // choice negative - otherwise it makes it a random choice
+          if(shouldChooseNegativeX)
+          {
+            xDirection = -xDirection;
+          }
+          else if(rand.nextInt(100) >= 50)
+          {
+            xDirection = -xDirection;
+          }
+          if(shouldChooseNegativeY)
+          {
+            yDirection = -yDirection;
+          }
+          else if(rand.nextInt(100) >= 50)
+          {
+            yDirection = -yDirection;
+          }
+          directionXY.set(xDirection, yDirection, 0.0);
+        }
+        else
+        {
+          Point2D pt = super.PathfindToThePlayer(engine);
+          xDirection = pt.getX();
+          yDirection = pt.getY();
+          if(yDirection == 0.0 && xDirection != 0.0)
+          {
+            xDirection = xDirection < 0.0 ? -1.0 : 1.0;
+          }
+          else if(xDirection != 0.0)
+          {
+            xDirection = xDirection < 0.0 ? -0.5 : 0.5;
+          }
+          if(xDirection == 0.0 && yDirection != 0.0)
+          {
+            yDirection = yDirection < 0.0 ? -1.0 : 1.0;
+          }
+          else if(yDirection != 0.0)
+          {
+            yDirection = yDirection < 0.0 ? -0.5 : 0.5;
+          }
+          directionXY.set(xDirection, yDirection, 0.0);
+          ((MasterZombie) engine.getWorld().getMasterZombie()).detectPlayer();
+        }
       }
+
+      if(canSmellPlayer(engine))
+      {
+        lookAt(engine.getWorld().getPlayer().getLocation().getX(), engine.getWorld().getPlayer().getLocation().getY());
+      }
+
+      if(startingHealth < 0.0)
+      {
+        startingHealth = zombieHealth;
+        currentHealth = startingHealth;
+      }
+
+      if(((Player) engine.getWorld().getPlayer()).attacking() && isAttackable(engine))
+      {
+        currentHealth -= 75.0 * deltaSeconds;
+      }
+
+      if(currentHealth <= 0)
+      {
+        ((ZombieHouseEngine) engine).killZombie(this);
+      }
+
+      double totalSpeed = zombieSpeed * deltaSeconds;
+      setLocation(getLocation().getX() + directionXY.getX() * totalSpeed,
+              getLocation().getY() + directionXY.getY() * totalSpeed);
+
+      checkPlaySound(engine, deltaSeconds);
     }
-
-    if(canSmellPlayer(engine))
-    {
-      lookAt(engine.getWorld().getPlayer().getLocation().getX(), engine.getWorld().getPlayer().getLocation().getY());
-    }
-
-    if(startingHealth < 0.0)
-    {
-      startingHealth = 20;
-      currentHealth = startingHealth;
-    }
-
-    if(((Player) engine.getWorld().getPlayer()).attacking() && isAttackable(engine))
-    {
-      currentHealth -= 10.0 * deltaSeconds;
-    }
-
-    if(currentHealth <= 0)
-    {
-      ((ZombieHouseEngine) engine).killZombie(this);
-    }
-
-    double totalSpeed = zombieSpeed * deltaSeconds;
-    setLocation(getLocation().getX()+directionXY.getX() * totalSpeed,
-                getLocation().getY() +directionXY.getY() * totalSpeed);
-
-
-
-    checkPlaySound(engine, deltaSeconds);
     return UpdateResult.UPDATE_COMPLETED;
-
-
-
   }
 }

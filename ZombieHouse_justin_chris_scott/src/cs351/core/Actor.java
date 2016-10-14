@@ -7,13 +7,11 @@ import javafx.scene.transform.Rotate;
  * The Actor class represents any object that can be added to the game
  * and updated each frame. It can be used to represent both moving
  * and non-moving objects.
- *
+ * <p>
  * The Engine will guarantee that the update function for each Actor will
  * be called at most once per frame unless the shouldUpdate boolean is
  * set to false (this can be done for something like a wall that never
  * needs to move/be updated but still needs to be drawn).
- *
- *
  */
 // @todo Need to finish this - haven't figured out all of the stuff this needs yet, especially for Rendering
 public abstract class Actor
@@ -29,12 +27,14 @@ public abstract class Actor
   protected boolean noClip = false; // if true the object will not collide with anything (phase through walls, zombies, etc.)
   protected boolean isPartOfFloor; // true if floor tile
   protected boolean isPartOfCeiling; // true if ceiling
-  protected boolean isPlayer=false; // true if Player
+  protected boolean isPlayer = false; // true if Player
   protected final String TEXTURE_FILE;
   protected RenderEntity renderEntity = null;
   protected Rotate rotation = new Rotate(0.0);
   protected double rotationAngle = 0.0;
   protected Vector3 direction = new Vector3(0.0);
+  protected double startingHealth = -1.0;
+  protected double currentHealth;
 
   /**
    * UpdateResult contains a few different enum values that each Actor can use
@@ -88,10 +88,10 @@ public abstract class Actor
   /**
    * Updates the Actor. The Engine guarantees that this function will be called
    * at most once per frame for all existing Actors.
-   *
+   * <p>
    * This is also where the object should perform animation steps.
    *
-   * @param engine reference to the Engine that is performing the frame update - can be used for Engine callbacks
+   * @param engine       reference to the Engine that is performing the frame update - can be used for Engine callbacks
    * @param deltaSeconds the number of seconds that have gone by since the last frame (can be used for animation, movement, etc.)
    * @return result of the update - tells the Engine if it needs to do anything special (end the game, etc.)
    */
@@ -103,12 +103,13 @@ public abstract class Actor
    * involved. For example, if a wall and a zombie collided, the wall object
    * would get a reference to the zombie, and the zombie would get a reference to the
    * wall.
-   *
+   * <p>
    * The only thing that Actors don't have to deal with is offsetting themselves
    * because of a collision. If two objects collide the Engine will push each of
    * them (unless one of the Actors is static) away from each other.
+   *
    * @param engine reference to the Engine that is performing the frame update - can be used for Engine callbacks
-   * @param actor reference to the Actor object that collided with this object
+   * @param actor  reference to the Actor object that collided with this object
    */
   public abstract void collided(Engine engine, Actor actor);
 
@@ -119,7 +120,10 @@ public abstract class Actor
   public void destroy()
   {
     RenderEntity entity = getRenderEntity();
-    if (entity != null) entity.destroy();
+    if(entity != null)
+    {
+      entity.destroy();
+    }
   }
 
   public RenderEntity getRenderEntity()
@@ -167,7 +171,7 @@ public abstract class Actor
   {
     return isPartOfCeiling;
   }
-  
+
   /**
    * The renderer will use this function to figure out whether the tile is part of
    * the ceiling so it can draw it properly.
@@ -192,7 +196,7 @@ public abstract class Actor
   /**
    * Allows for the Actor's width and height to be set.
    *
-   * @param width width (in tiles)
+   * @param width  width (in tiles)
    * @param height height (in tiles)
    */
   public void setWidthHeightDepth(int width, int height, int depth)
@@ -248,6 +252,7 @@ public abstract class Actor
    *
    * @return player location
    */
+
   public Vector3 getLocation()
   {
     return location;
@@ -279,7 +284,7 @@ public abstract class Actor
 
   /**
    * This is used as a flag during the Engine's collision detection routine.
-   *
+   * <p>
    * If no-clip is active it will let the Actor walk through anything but the floor.
    *
    * @return true if no-clip is active and false if not
@@ -297,5 +302,10 @@ public abstract class Actor
   public void setNoClip(boolean value)
   {
     noClip = value;
+  }
+
+  public void setShouldUpdate(boolean value)
+  {
+    shouldUpdate = value;
   }
 }

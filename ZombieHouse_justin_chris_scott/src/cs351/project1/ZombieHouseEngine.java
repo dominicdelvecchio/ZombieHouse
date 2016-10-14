@@ -2,6 +2,7 @@ package cs351.project1;
 
 import cs351.core.*;
 import cs351.entities.Ghost;
+import cs351.entities.Zombie;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
@@ -173,7 +174,7 @@ public class ZombieHouseEngine implements Engine
     {
       Ghost ghost = new Ghost("textures/ice_texture.jpg", "resources/Zombie2_Animated.txt",ghostMapX,ghostMapY,
               getWorld().getCurrentLevel().getRandomLevelGenerator().getXSpawnPoint(), getWorld().getCurrentLevel().getRandomLevelGenerator().getYSpawnPoint(),1,1,1, ghostMovement);
-      getWorld().setGhost(ghostCount, ghost);
+      ((ZombieWorld) getWorld()).setGhost(ghostCount, ghost);
       ALL_ACTORS.add(ghost);
       UPDATE_ACTORS.add(ghost);
       getRenderer().registerActor(ghost,
@@ -325,19 +326,22 @@ public class ZombieHouseEngine implements Engine
     int i = 0;
     for(Actor actor : KILLED_ACTORS)
     {
+      actor.setNoClip(true);
+      actor.setShouldUpdate(false);
+      actor.setLocation(100, 100);
       i++;
-      actor.destroy();
+/*      actor.destroy();
       if(getWorld().contains(actor)){
         getWorld().remove(actor);
       }
       if(UPDATE_ACTORS.contains(actor))
       {
         UPDATE_ACTORS.remove(actor);
-      }
-      if(ALL_ACTORS.contains(actor))
+      }*/
+/*      if(ALL_ACTORS.contains(actor))
       {
         ALL_ACTORS.remove(actor);
-      }
+      }*/
     }
     KILLED_ACTORS.clear();
     System.out.println(i + " zombies killed");
@@ -359,6 +363,7 @@ public class ZombieHouseEngine implements Engine
     }
     else if (pendingLevelRestart)
     {
+      restoreZombies();
       initEngineFromWorld(false);
       pendingLevelRestart = false;
     }
@@ -389,11 +394,7 @@ public class ZombieHouseEngine implements Engine
         //renderer.registerActor(ghost,);
         //if(getWorld().contains(ghost)) System.out.println("true ye true");
         getWorld().restartLevel(this);
-        
-        
-        
     }
-      
 
     pullLatestActorsFromWorld();
     // the +1 accounts for it truncating values after the decimal when the
@@ -439,5 +440,15 @@ public class ZombieHouseEngine implements Engine
     useCollisionDetection = settings.getValue(COLLISION).equals("on");
     playerNoClip = settings.getValue(PLAYER_NO_CLIP).equals("on");
     updateSoundEngine = settings.getValue(SOUND_ENGINE).equals("on");
+  }
+
+  private void restoreZombies(){
+    for(Actor actor : ALL_ACTORS){
+      if(actor instanceof Zombie){
+        actor.setNoClip(false);
+        actor.setShouldUpdate(true);
+        ((Zombie) actor).restoreHealth();
+      }
+    }
   }
 }

@@ -27,6 +27,7 @@ public class Zombie extends Actor
   private String intenseSound = "sound/zombie_growl_intense.wav";
   private int currSound = 0;
   protected boolean setNewDirection = true;
+  protected double zombieHealth = 20.0;
 
   public Zombie(String textureFile, double x, double y, int width, int height, int depth)
   {
@@ -252,5 +253,9 @@ public class Zombie extends Actor
     {
       return false;
     }
+  }
+
+  public void restoreHealth(){
+    currentHealth = zombieHealth;
   }
 }

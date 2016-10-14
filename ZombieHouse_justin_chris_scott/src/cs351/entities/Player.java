@@ -12,7 +12,7 @@ import cs351.core.KeyboardInput;
  */
 public class Player extends Actor
 {
-  protected boolean isPlayer=true; // true -- this is the Player
+  protected boolean isPlayer = true; // true -- this is the Player
   private double baseSpeed = 2.0; // for LOCATION_X and LOCATION_Y movement - measured in tiles per second
   private double forwardX = 0.0; // not moving at first
   private double forwardY = 0.0; // not moving at first
@@ -26,8 +26,6 @@ public class Player extends Actor
   private double maxStamina = -1.0;
   private double staminaRegen;
   private double currentStamina;
-  private double startingHealth = -1.0;
-  private double currentHealth;
   private boolean currentlyRegeneratingStamina = false;
   private boolean isRunning = false;
   private Vector3 forwardDirection = new Vector3(0.0);
@@ -35,6 +33,8 @@ public class Player extends Actor
   private double stepSoundTimer = 0.0;
   private boolean rightFoot = false;
   private int numAttackingZombies = 0;
+  private double lastAttack = 0.0;
+  private boolean shouldAttack = false;
   private boolean isAttacking = false;
 
   public Player(double x, double y, int height)
@@ -47,13 +47,13 @@ public class Player extends Actor
 
   public UpdateResult update(Engine engine, double deltaSeconds)
   {
-    if (maxStamina < 0.0)
+    if(maxStamina < 0.0)
     {
       maxStamina = Double.parseDouble(engine.getSettings().getValue("player_stamina"));
       staminaRegen = Double.parseDouble(engine.getSettings().getValue("stamina_regen"));
       currentStamina = maxStamina;
     }
-    if (startingHealth < 0.0)
+    if(startingHealth < 0.0)
     {
       startingHealth = Double.parseDouble(engine.getSettings().getValue("player_health"));
       currentHealth = startingHealth;
@@ -61,7 +61,7 @@ public class Player extends Actor
 
     currentHealth -= numAttackingZombies * 10.0 * deltaSeconds;
     numAttackingZombies = 0;
-    if (currentHealth <= 0.0)
+    if(currentHealth <= 0.0)
     {
       System.out.println("Defeat");
       return UpdateResult.PLAYER_DEFEAT;
@@ -74,42 +74,78 @@ public class Player extends Actor
     // totalSpeed represents the total speed per second in pixels
     //System.out.println(forwardX);
     double stepTimerOffset = forwardX > 0.0 ? forwardX : -forwardX;
-    if (forwardX == 0.0 && rightX != 0.0) stepTimerOffset = rightX > 0.0 ? rightX : -rightX;
+    if(forwardX == 0.0 && rightX != 0.0)
+    {
+      stepTimerOffset = rightX > 0.0 ? rightX : -rightX;
+    }
     stepSoundTimer += baseSpeed * stepTimerOffset * deltaSeconds;
-    if (stepSoundTimer > 1.0)
+    if(stepSoundTimer > 1.0)
     {
       stepSoundTimer = 0.0;
       double stepLocX, stepLocY;
       double multiplier;
-      if (rightFoot) multiplier = 5;
-      else multiplier = -5;
+      if(rightFoot)
+      {
+        multiplier = 5;
+      }
+      else
+      {
+        multiplier = -5;
+      }
       rightFoot = !rightFoot;
 
       stepLocX = getLocation().getX() + multiplier * rightDirection.getX();
       stepLocY = getLocation().getY() + multiplier * rightDirection.getY();
-      if (isRunning) engine.getSoundEngine().queueSoundAtLocation("sound/player_step.wav", stepLocX, stepLocY, 2.0, 3.0);
-      else engine.getSoundEngine().queueSoundAtLocation("sound/player_step.wav", stepLocX, stepLocY);
+      if(isRunning)
+      {
+        engine.getSoundEngine().queueSoundAtLocation("sound/player_step.wav", stepLocX, stepLocY, 2.0, 3.0);
+      }
+      else
+      {
+        engine.getSoundEngine().queueSoundAtLocation("sound/player_step.wav", stepLocX, stepLocY);
+      }
       //engine.getSoundEngine().queueSoundAtLocation("sound/zombie_low.wav", getLocation().getX(), getLocation().getY());
     }
+
+    lastAttack += deltaSeconds;
+//    System.out.println("shouldAttack = " + shouldAttack + ", lastAttack = " + lastAttack);
+    if(lastAttack >= 1.0){
+      if(shouldAttack)
+      {
+        isAttacking = true;
+        lastAttack = 0.0;
+      }
+    }
+    else{
+      shouldAttack = false;
+      if(lastAttack>=0.25){
+        isAttacking = false;
+      }
+    }
+
     double totalSpeed = baseSpeed * deltaSeconds * engine.getWorld().getTilePixelWidth();
     setLocation(getLocation().getX() + totalSpeed * forwardX * forwardDirection.getX(),
-                getLocation().getY() + totalSpeed * forwardY * forwardDirection.getY());
+            getLocation().getY() + totalSpeed * forwardY * forwardDirection.getY());
     setLocation(getLocation().getX() + totalSpeed * rightX * rightDirection.getX(),
-                getLocation().getY() + totalSpeed * rightY * rightDirection.getY());
+            getLocation().getY() + totalSpeed * rightY * rightDirection.getY());
     return UpdateResult.UPDATE_COMPLETED;
   }
 
   public void collided(Engine engine, Actor actor)
   {
-    if (actor instanceof Zombie) ++numAttackingZombies;
+    if(actor instanceof Zombie)
+    {
+      ++numAttackingZombies;
+    }
   }
 
   public void attack()
   {
-    isAttacking = true;
+    shouldAttack = true;
   }
 
-  public boolean attacking(){
+  public boolean attacking()
+  {
     return isAttacking;
   }
 
@@ -173,8 +209,8 @@ public class Player extends Actor
     double forwardY;
     double rightX;
     double rightY;
-    if (engine.getKeyInputSystem().isKeyPressed(KeyboardInput.Keys.SHIFT_KEY) && currentStamina >= 2 * deltaSeconds)// &&
-            //!currentlyRegeneratingStamina)
+    if(engine.getKeyInputSystem().isKeyPressed(KeyboardInput.Keys.SHIFT_KEY) && currentStamina >= 2 * deltaSeconds)// &&
+    //!currentlyRegeneratingStamina)
     {
       currentlyRegeneratingStamina = false;
       isRunning = true;
@@ -193,7 +229,10 @@ public class Player extends Actor
       rightY = cachedRightY;
       currentStamina += staminaRegen * deltaSeconds;
       //System.out.println(currentStamina);
-      if (currentStamina >= maxStamina) currentStamina = maxStamina;
+      if(currentStamina >= maxStamina)
+      {
+        currentStamina = maxStamina;
+      }
     }
 
     setForwardSpeedX(forwardX);
