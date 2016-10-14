@@ -42,6 +42,7 @@ public class ZombieHouseEngine implements Engine
   int ghostMovement2 = 0;
   int ghostMovement3 = 0;
   
+  
   // pendingLevelRestart and pendingNextLevel let the engine know if it needs to do something
   // after the current frame is finished
   private boolean pendingLevelRestart;
@@ -306,6 +307,7 @@ public class ZombieHouseEngine implements Engine
   @Override
   public void frame()
   {
+    
     //System.out.println("called");
     if (!isInitialized || isPaused || isPendingShutdown) return;
     // start the collision detection system's new frame
@@ -446,7 +448,6 @@ public class ZombieHouseEngine implements Engine
         initializeGhost(ghostCount);
         ghostCount++;
         
-        
         /*getWorld().add(ghost);
         Vector3 location = new Vector3
                 (getWorld().getCurrentLevel().getRandomLevelGenerator().getXSpawnPoint(), getWorld().getCurrentLevel().getRandomLevelGenerator().getYSpawnPoint(), 0);
@@ -500,6 +501,7 @@ public class ZombieHouseEngine implements Engine
     }
   }
 
+  
   private void setEngineVariablesFromSettings()
   {
     isPaused = settings.getValue(ENGINE_PAUSED).equals("true");
