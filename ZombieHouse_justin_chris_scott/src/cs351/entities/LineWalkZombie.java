@@ -25,8 +25,11 @@ public class LineWalkZombie extends Zombie {
   private boolean metPlayer = false;
   private boolean zombieMemory = false;
   private boolean died = false;
-  private LinkedList zombieMapX;
-  private LinkedList zombieMapY;
+  private double zombieTime = 0;
+  private double timeMetPlayer;
+  private double activateMemory;
+  private LinkedList<Double> zombieMapX = new LinkedList<Double>();
+  private LinkedList<Double> zombieMapY = new LinkedList<Double>();
 
   public LineWalkZombie(String textureFile, double x, double y, int width, int height, int depth)
   {
@@ -46,7 +49,7 @@ public class LineWalkZombie extends Zombie {
    */
   public UpdateResult update(Engine engine, double deltaSeconds)
   { 
-
+    zombieTime = zombieTime + deltaSeconds;
     double zombieSpeed = Double.parseDouble(engine.getSettings().getValue("zombie_speed"));
 
     // totalSpeed represents the movement speed offset in tiles per second
@@ -69,7 +72,6 @@ public class LineWalkZombie extends Zombie {
       }
       else if (canSmellPlayer(engine))
       {
-        metPlayer = true;
         setNewDirection = false;
         Point2D pt = super.PathfindToThePlayer(engine);
         xDirection = pt.getX();
@@ -108,6 +110,10 @@ public class LineWalkZombie extends Zombie {
     double totalSpeed = zombieSpeed * deltaSeconds;
     setLocation(getLocation().getX() + xDirection * totalSpeed,
                 getLocation().getY() + yDirection * totalSpeed);
+    
+    //zombieMapX.add(getLocation().getX());
+    //zombieMapY.add(getLocation().getY());
+    
 
     checkPlaySound(engine, deltaSeconds);
     return UpdateResult.UPDATE_COMPLETED;
