@@ -6,8 +6,8 @@ package cs351.entities;
  * @author Scott Cooper
  */
 
+import java.util.LinkedList;
 import java.util.Random;
-
 import cs351.core.Engine;
 import cs351.core.GlobalConstants;
 import javafx.geometry.Point2D;
@@ -21,6 +21,14 @@ public class LineWalkZombie extends Zombie
   private Random rand = new Random();
   private double xDirection = 0.5;
   private double yDirection = 0.5;
+  private boolean metPlayer = false;
+  private boolean zombieMemory = false;
+  private boolean died = false;
+  private double zombieTime = 0;
+  private double timeMetPlayer;
+  private double activateMemory;
+  private LinkedList<Double> zombieMapX = new LinkedList<Double>();
+  private LinkedList<Double> zombieMapY = new LinkedList<Double>();
 
   public LineWalkZombie(String textureFile, double x, double y, int width, int height, int depth)
   {
@@ -35,7 +43,6 @@ public class LineWalkZombie extends Zombie
   /**
    * Parameters are given from the Engine so that the appropriate
    * updates can be made
-   *
    * @param engine
    * @param deltaSeconds
    */
@@ -43,6 +50,7 @@ public class LineWalkZombie extends Zombie
   {
     if(shouldUpdate)
     {
+      zombieTime = zombieTime + deltaSeconds;
       double zombieSpeed = Double.parseDouble(engine.getSettings().getValue("zombie_speed"));
 
       // totalSpeed represents the movement speed offset in tiles per second
@@ -115,8 +123,13 @@ public class LineWalkZombie extends Zombie
       double totalSpeed = zombieSpeed * deltaSeconds;
       setLocation(getLocation().getX() + xDirection * totalSpeed,
               getLocation().getY() + yDirection * totalSpeed);
+
+      //zombieMapX.add(getLocation().getX());
+      //zombieMapY.add(getLocation().getY());
+
+
       checkPlaySound(engine, deltaSeconds);
     }
-    return UpdateResult.UPDATE_COMPLETED;
+      return UpdateResult.UPDATE_COMPLETED;
   }
 }

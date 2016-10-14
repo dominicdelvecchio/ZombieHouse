@@ -12,6 +12,8 @@ import cs351.core.GlobalConstants;
 import cs351.core.Vector3;
 import cs351.project1.ZombieHouseEngine;
 import javafx.geometry.Point2D;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
 
 
@@ -24,6 +26,8 @@ public class RandomWalkZombie extends Zombie
   private double xDirection = 0;
   private double yDirection = 0;
   private Vector3 directionXY = new Vector3(0.0);
+  private LinkedList<Double> zombieMapX = new LinkedList<Double>();
+  private LinkedList<Double> zombieMapY = new LinkedList<Double>();
 
   public RandomWalkZombie(String textureFile, double x, double y, int width, int height, int depth)
   {
@@ -38,7 +42,6 @@ public class RandomWalkZombie extends Zombie
   /**
    * Parameters are given from the Engine so that the appropriate
    * updates can be made
-   *
    * @param engine
    * @param deltaSeconds
    */
@@ -65,22 +68,10 @@ public class RandomWalkZombie extends Zombie
           yDirection = 1.0 - xDirection;
           // If shouldChooseNegativeX/Y are true, the zombie is forced to make the heading
           // choice negative - otherwise it makes it a random choice
-          if(shouldChooseNegativeX)
-          {
-            xDirection = -xDirection;
-          }
-          else if(rand.nextInt(100) >= 50)
-          {
-            xDirection = -xDirection;
-          }
-          if(shouldChooseNegativeY)
-          {
-            yDirection = -yDirection;
-          }
-          else if(rand.nextInt(100) >= 50)
-          {
-            yDirection = -yDirection;
-          }
+          if(shouldChooseNegativeX) xDirection = -xDirection;
+          else if(rand.nextInt(100) >= 50) xDirection = -xDirection;
+          if(shouldChooseNegativeY) yDirection = -yDirection;
+          else if(rand.nextInt(100) >= 50) yDirection = -yDirection;
           directionXY.set(xDirection, yDirection, 0.0);
         }
         else
@@ -88,22 +79,10 @@ public class RandomWalkZombie extends Zombie
           Point2D pt = super.PathfindToThePlayer(engine);
           xDirection = pt.getX();
           yDirection = pt.getY();
-          if(yDirection == 0.0 && xDirection != 0.0)
-          {
-            xDirection = xDirection < 0.0 ? -1.0 : 1.0;
-          }
-          else if(xDirection != 0.0)
-          {
-            xDirection = xDirection < 0.0 ? -0.5 : 0.5;
-          }
-          if(xDirection == 0.0 && yDirection != 0.0)
-          {
-            yDirection = yDirection < 0.0 ? -1.0 : 1.0;
-          }
-          else if(yDirection != 0.0)
-          {
-            yDirection = yDirection < 0.0 ? -0.5 : 0.5;
-          }
+          if(yDirection == 0.0 && xDirection != 0.0) xDirection = xDirection < 0.0 ? -1.0 : 1.0;
+          else if(xDirection != 0.0) xDirection = xDirection < 0.0 ? -0.5 : 0.5;
+          if(xDirection == 0.0 && yDirection != 0.0) yDirection = yDirection < 0.0 ? -1.0 : 1.0;
+          else if(yDirection != 0.0) yDirection = yDirection < 0.0 ? -0.5 : 0.5;
           directionXY.set(xDirection, yDirection, 0.0);
           ((MasterZombie) engine.getWorld().getMasterZombie()).detectPlayer();
         }
@@ -134,6 +113,9 @@ public class RandomWalkZombie extends Zombie
       setLocation(getLocation().getX() + directionXY.getX() * totalSpeed,
               getLocation().getY() + directionXY.getY() * totalSpeed);
 
+
+      //zombieMapX.add(getLocation().getX() + xDirection * totalSpeed);
+      //zombieMapY.add(getLocation().getY() + yDirection * totalSpeed);
       checkPlaySound(engine, deltaSeconds);
     }
     return UpdateResult.UPDATE_COMPLETED;

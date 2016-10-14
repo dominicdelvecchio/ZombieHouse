@@ -32,11 +32,17 @@ public class ZombieHouseEngine implements Engine
   private final HashSet<Actor> KILLED_ACTORS;
   private boolean isInitialized = false;
   private boolean isPendingShutdown = false;
-  private LinkedList<Double> ghostMapX = new LinkedList<Double>();
-  private LinkedList<Double> ghostMapY = new LinkedList<Double>();
-  private LinkedList<Vector3> ghostMap3 = new LinkedList<Vector3>();
+  private LinkedList<Double> ghostMap1X = new LinkedList<Double>();
+  private LinkedList<Double> ghostMap1Y = new LinkedList<Double>();
+  private LinkedList<Double> ghostMap2X = new LinkedList<Double>();
+  private LinkedList<Double> ghostMap2Y = new LinkedList<Double>();
+  private LinkedList<Double> ghostMap3X = new LinkedList<Double>();
+  private LinkedList<Double> ghostMap3Y = new LinkedList<Double>();
   int ghostCount = 0;
-  int ghostMovement = 0;
+  int ghostMovement1 = 0;
+  int ghostMovement2 = 0;
+  int ghostMovement3 = 0;
+
   
   // pendingLevelRestart and pendingNextLevel let the engine know if it needs to do something
   // after the current frame is finished
@@ -167,22 +173,82 @@ public class ZombieHouseEngine implements Engine
       ghostMovement++;
     }
   }*/
-  
-  private void initializeGhost (int ghostCount)
+  void monitorGhost(int ghostCount)
   {
     if(ghostCount == 0)
     {
-      Ghost ghost = new Ghost("textures/ice_texture.jpg", "resources/Zombie2_Animated.txt",ghostMapX,ghostMapY,
-              getWorld().getCurrentLevel().getRandomLevelGenerator().getXSpawnPoint(), getWorld().getCurrentLevel().getRandomLevelGenerator().getYSpawnPoint(),1,1,1, ghostMovement);
-      ((ZombieWorld) getWorld()).setGhost(ghostCount, ghost);
-      ALL_ACTORS.add(ghost);
-      UPDATE_ACTORS.add(ghost);
-      getRenderer().registerActor(ghost,
-              ghost.getRenderEntity(),
+      ghostMap1X.add(getWorld().getPlayer().getLocation().getX());
+      ghostMap1Y.add(getWorld().getPlayer().getLocation().getY());
+      ghostMovement1++;
+    }
+    if(ghostCount == 1)
+    {
+      ghostMap2X.add(getWorld().getPlayer().getLocation().getX());
+      ghostMap2Y.add(getWorld().getPlayer().getLocation().getY());
+      ghostMovement2++;
+    }
+    if(ghostCount == 2)
+    {
+      ghostMap3X.add(getWorld().getPlayer().getLocation().getX());
+      ghostMap3Y.add(getWorld().getPlayer().getLocation().getY());
+      ghostMovement3++;
+    }
+  }
+  private void initializeGhost (int ghostCount)
+  {
+    if(ghostCount >=0)
+    {
+      Ghost ghost1 = new Ghost("textures/ice_texture.jpg", "resources/Zombie2_Animated.txt",ghostMap1X,ghostMap1Y,
+              getWorld().getCurrentLevel().getRandomLevelGenerator().getXSpawnPoint(), getWorld().getCurrentLevel().getRandomLevelGenerator().getYSpawnPoint(),1,1,1, ghostMovement1);
+      getWorld().setGhost(ghostCount, ghost1);
+      ALL_ACTORS.add(ghost1);
+      UPDATE_ACTORS.add(ghost1);
+      getRenderer().registerActor(ghost1,
+              ghost1.getRenderEntity(),
               Color.BEIGE, // diffuse
               Color.BEIGE, // specular
               Color.WHITE); // ambient
     }
+    if(ghostCount >= 1)
+    {
+      getWorld().getGhost(1).setMove(0);
+      Ghost ghost2 = new Ghost("textures/ice_texture.jpg", "resources/Zombie2_Animated.txt",ghostMap2X,ghostMap2Y,
+              getWorld().getCurrentLevel().getRandomLevelGenerator().getXSpawnPoint(), getWorld().getCurrentLevel().getRandomLevelGenerator().getYSpawnPoint(),1,1,1, ghostMovement2);
+      getWorld().setGhost(ghostCount, ghost2);
+      ALL_ACTORS.add(ghost2);
+      UPDATE_ACTORS.add(ghost2);
+      getRenderer().registerActor(ghost2,
+              ghost2.getRenderEntity(),
+              Color.BEIGE, // diffuse
+              Color.BEIGE, // specular
+              Color.WHITE); // ambient
+    }
+    if(ghostCount >= 2)
+    {
+      getWorld().getGhost(1).setMove(0);
+      getWorld().getGhost(2).setMove(0);
+      getWorld().getGhost(1).setMove(0);
+      Ghost ghost3 = new Ghost("textures/ice_texture.jpg", "resources/Zombie2_Animated.txt",ghostMap3X,ghostMap3Y,
+              getWorld().getCurrentLevel().getRandomLevelGenerator().getXSpawnPoint(), getWorld().getCurrentLevel().getRandomLevelGenerator().getYSpawnPoint(),1,1,1, ghostMovement3);
+      getWorld().setGhost(ghostCount, ghost3);
+      ALL_ACTORS.add(ghost3);
+      UPDATE_ACTORS.add(ghost3);
+      getRenderer().registerActor(ghost3,
+              ghost3.getRenderEntity(),
+              Color.BEIGE, // diffuse
+              Color.BEIGE, // specular
+              Color.WHITE); // ambient
+    }
+    if(ghostCount > 2)
+    {
+      getWorld().getGhost(1).setMove(0);
+      getWorld().getGhost(2).setMove(0);
+      getWorld().getGhost(3).setMove(0);
+    }
+
+
+
+
   }
 
   @Override
@@ -252,9 +318,10 @@ public class ZombieHouseEngine implements Engine
     // update all actors and process their return statements
     getWorld().getPlayer().setNoClip(playerNoClip);
     //ghostBehvior(ghostCount);
-    ghostMapX.add(getWorld().getPlayer().getLocation().getX());
-    ghostMapY.add(getWorld().getPlayer().getLocation().getY());
-    ghostMovement++;
+    //ghostMapX.add(getWorld().getPlayer().getLocation().getX());
+    //ghostMapY.add(getWorld().getPlayer().getLocation().getY());
+    monitorGhost(ghostCount);
+    //ghostMovement++;
     for (Actor actor : UPDATE_ACTORS)
     {
       processActorReturnStatement(actor.update(this, deltaSeconds));
@@ -384,7 +451,7 @@ public class ZombieHouseEngine implements Engine
       {
         initializeGhost(ghostCount);
         ghostCount++;
-        ghostMovement = 0;
+
         /*getWorld().add(ghost);
         Vector3 location = new Vector3
                 (getWorld().getCurrentLevel().getRandomLevelGenerator().getXSpawnPoint(), getWorld().getCurrentLevel().getRandomLevelGenerator().getYSpawnPoint(), 0);

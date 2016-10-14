@@ -20,6 +20,7 @@ public class Ghost extends Actor
   private int ghostMovement;
   private int move = 0;
   
+  
   public Ghost(String textureFile)
   {
     super(textureFile);
@@ -32,6 +33,7 @@ public class Ghost extends Actor
     this.ghostMovement = ghostMovement;
     setLocation(x, y);
     setWidthHeightDepth(width, height, depth);
+    noClip = true; // if this is true the player can run through everything but the floor/ceiling
   }
   
   @Override
@@ -51,7 +53,7 @@ public class Ghost extends Actor
     }
     else
     {
-      System.out.println("done");
+      setLocation(500,500);
     }
     return UpdateResult.UPDATE_COMPLETED;
   }
@@ -61,6 +63,6 @@ public class Ghost extends Actor
   {
     
   }
-  
+   public void setMove(int move){this.move = move;}
   
 }
