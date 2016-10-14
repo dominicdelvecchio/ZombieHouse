@@ -12,6 +12,9 @@ import cs351.core.GlobalConstants;
 import cs351.core.Vector3;
 import cs351.project1.ZombieHouseEngine;
 import javafx.geometry.Point2D;
+
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
 
 
@@ -25,6 +28,8 @@ public class RandomWalkZombie extends Zombie {
   private Vector3 directionXY = new Vector3(0.0);
   private double startingHealth = -1.0;
   private double currentHealth;
+  private LinkedList<Double> zombieMapX = new LinkedList<Double>();
+  private LinkedList<Double> zombieMapY = new LinkedList<Double>();
 
   public RandomWalkZombie(String textureFile, double x, double y, int width, int height, int depth)
   {
@@ -108,9 +113,11 @@ public class RandomWalkZombie extends Zombie {
     double totalSpeed = zombieSpeed * deltaSeconds;
     setLocation(getLocation().getX()+directionXY.getX() * totalSpeed,
                 getLocation().getY() +directionXY.getY() * totalSpeed);
-
-
-
+  
+  
+  
+    //zombieMapX.add(getLocation().getX() + xDirection * totalSpeed);
+    //zombieMapY.add(getLocation().getY() + yDirection * totalSpeed);
     checkPlaySound(engine, deltaSeconds);
     return UpdateResult.UPDATE_COMPLETED;
 
