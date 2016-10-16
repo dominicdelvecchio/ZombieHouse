@@ -7,6 +7,7 @@ import cs351.AStar.Node;
 import cs351.AStar.Pathfinder;
 import javafx.geometry.Point2D;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -24,12 +25,20 @@ public class Zombie extends Actor
   private double xDirection = 0;
   private double yDirection = 0;
   private double distanceToPlayer = 1000.0;
-  private boolean metPlayer = false;
   private String[] sounds = { "sound/zombie_low.wav", "sound/zombie_chains_loud.wav", "sound/zombie_growl_intense.wav" };
   private String intenseSound = "sound/zombie_growl_intense.wav";
   private int currSound = 0;
   protected boolean setNewDirection = true;
   protected double zombieHealth = 20.0;
+  private LinkedList<Double> zombieMapX = new LinkedList<Double>();
+  private LinkedList<Double> zombieMapY = new LinkedList<Double>();
+  protected double zombieTime = 0.0;
+  protected double currentTime = 0.0;;
+  protected boolean playerMet = false;
+  protected boolean playerHasDied = false;
+  private int movement = 0;
+  protected int move = 0;
+  
 
   public Zombie(String textureFile, double x, double y, int width, int height, int depth)
   {
@@ -263,7 +272,23 @@ public class Zombie extends Actor
     currentHealth = zombieHealth;
   }
 
-  public void setMetPlayer(){
+  /*public void setMetPlayer(){
     metPlayer = true;
+  }*/
+  protected void recordZombie()
+  {
+    movement++;
+    zombieMapX.add(getLocation().getX());
+    zombieMapY.add(getLocation().getY());
   }
+  
+  protected void moveZombiePast()
+  {
+    if (move < movement)
+    {
+      setLocation(zombieMapX.get(move), zombieMapY.get(move));
+      move++;
+    }
+  }
+  
 }
