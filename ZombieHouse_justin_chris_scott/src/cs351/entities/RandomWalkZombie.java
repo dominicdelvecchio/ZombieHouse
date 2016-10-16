@@ -24,15 +24,7 @@ public class RandomWalkZombie extends Zombie
   private double xDirection = 0;
   private double yDirection = 0;
   private Vector3 directionXY = new Vector3(0.0);
-  private LinkedList<Double> zombieMapX = new LinkedList<Double>();
-  private LinkedList<Double> zombieMapY = new LinkedList<Double>();
-  private LinkedList<Double> zombieLife = new LinkedList<Double>();
-  private double zombieTime = 0.0;
-  private double currentTime = 0.0;;
-  private boolean playerMet = false;
-  private boolean playerHasDied = false;
-  private int movement = 0;
-  private int move;
+  
 
   public RandomWalkZombie(String textureFile, double x, double y, int width, int height, int depth)
   {
@@ -171,21 +163,8 @@ public class RandomWalkZombie extends Zombie
     }
     return UpdateResult.UPDATE_COMPLETED;
   }
-  private void recordZombie()
-  {
-    movement++;
-    zombieMapX.add(getLocation().getX());
-    zombieMapY.add(getLocation().getY());
-  }
   
-  private void moveZombiePast()
-  {
-    if(move < movement)
-    {
-      setLocation(zombieMapX.get(move), zombieMapY.get(move));
-      move++;
-    }
     
   }
   
-}
+
