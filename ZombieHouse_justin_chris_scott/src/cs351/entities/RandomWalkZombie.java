@@ -28,6 +28,13 @@ public class RandomWalkZombie extends Zombie
   private Vector3 directionXY = new Vector3(0.0);
   private LinkedList<Double> zombieMapX = new LinkedList<Double>();
   private LinkedList<Double> zombieMapY = new LinkedList<Double>();
+  private LinkedList<Double> zombieLife = new LinkedList<Double>();
+  private double zombieTime = 0.0;
+  private double currentTime = 0.0;;
+  private boolean playerMet = false;
+  private boolean playerHasDied = false;
+  private int movement = 0;
+  private int move;
 
   public RandomWalkZombie(String textureFile, double x, double y, int width, int height, int depth)
   {
@@ -90,6 +97,7 @@ public class RandomWalkZombie extends Zombie
 
       if(canSmellPlayer(engine))
       {
+        playerMet = true;
         lookAt(engine.getWorld().getPlayer().getLocation().getX(), engine.getWorld().getPlayer().getLocation().getY());
       }
 
@@ -108,16 +116,48 @@ public class RandomWalkZombie extends Zombie
       {
         ((ZombieHouseEngine) engine).killZombie(this);
       }
-
-      double totalSpeed = zombieSpeed * deltaSeconds;
-      setLocation(getLocation().getX() + directionXY.getX() * totalSpeed,
-              getLocation().getY() + directionXY.getY() * totalSpeed);
-
-
-      //zombieMapX.add(getLocation().getX() + xDirection * totalSpeed);
-      //zombieMapY.add(getLocation().getY() + yDirection * totalSpeed);
+      
+      if(zombieTime > currentTime) {moveZombiePast();}
+      
+      else
+      {
+        double totalSpeed = zombieSpeed * deltaSeconds;
+        setLocation(getLocation().getX() + directionXY.getX() * totalSpeed,
+                getLocation().getY() + directionXY.getY() * totalSpeed);
+      }
+      
+      if(playerMet && !playerHasDied) {recordZombie();}
+        
+      if(!playerMet){zombieTime = (zombieTime+deltaSeconds);}
+      currentTime = (currentTime + deltaSeconds);
       checkPlaySound(engine, deltaSeconds);
+      
+      if(((Player) engine.getWorld().getPlayer()).getCurrentHealth() <= 0.0)
+      {
+        playerHasDied = true;
+        currentTime = 0.0;
+        move = 0;
+        
+      }
+      
     }
     return UpdateResult.UPDATE_COMPLETED;
   }
+  private void recordZombie()
+  {
+    movement++;
+    zombieMapX.add(getLocation().getX());
+    zombieMapY.add(getLocation().getY());
+  }
+  
+  private void moveZombiePast()
+  {
+    if(move < movement)
+    {
+      setLocation(zombieMapX.get(move), zombieMapY.get(move));
+      move++;
+    }
+    
+  }
+  
 }
