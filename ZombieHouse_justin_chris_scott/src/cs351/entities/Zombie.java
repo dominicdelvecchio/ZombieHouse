@@ -23,6 +23,7 @@ public class Zombie extends Actor
   private double soundTimer = 0.0;
   private double xDirection = 0;
   private double yDirection = 0;
+  private boolean metPlayer = false;
   private String[] sounds = { "sound/zombie_low.wav", "sound/zombie_chains_loud.wav", "sound/zombie_growl_intense.wav" };
   private String intenseSound = "sound/zombie_growl_intense.wav";
   private int currSound = 0;
@@ -257,5 +258,9 @@ public class Zombie extends Actor
 
   public void restoreHealth(){
     currentHealth = zombieHealth;
+  }
+
+  public void setMetPlayer(){
+    metPlayer = true;
   }
 }

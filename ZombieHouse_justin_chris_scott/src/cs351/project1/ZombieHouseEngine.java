@@ -1,14 +1,11 @@
 package cs351.project1;
 
 import cs351.core.*;
-import cs351.entities.Ghost;
-import cs351.entities.Zombie;
+import cs351.entities.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-
-
 import java.util.*;
 
 /**
@@ -390,28 +387,13 @@ public class ZombieHouseEngine implements Engine
 
   private void removeActors()
   {
-    int i = 0;
     for(Actor actor : KILLED_ACTORS)
     {
       actor.setNoClip(true);
       actor.setShouldUpdate(false);
       actor.setLocation(100, 100);
-      i++;
-/*      actor.destroy();
-      if(getWorld().contains(actor)){
-        getWorld().remove(actor);
-      }
-      if(UPDATE_ACTORS.contains(actor))
-      {
-        UPDATE_ACTORS.remove(actor);
-      }*/
-/*      if(ALL_ACTORS.contains(actor))
-      {
-        ALL_ACTORS.remove(actor);
-      }*/
     }
     KILLED_ACTORS.clear();
-    System.out.println(i + " zombies killed");
   }
 
   private void processActorReturnStatement(Actor.UpdateResult result)
@@ -516,6 +498,36 @@ public class ZombieHouseEngine implements Engine
         actor.setShouldUpdate(true);
         ((Zombie) actor).restoreHealth();
       }
+    }
+  }
+
+  public void bifurcate(Actor actor){
+    Zombie zombie = null;
+    if(actor instanceof LineWalkZombie){
+      zombie = new LineWalkZombie("textures/rock_texture.jpg",
+              "resources/Zombie1_Animated.txt",
+              actor.getLocation().getX()+0.1,
+              actor.getLocation().getY()+0.1,
+              actor.getWidth(), actor.getHeight(), actor.getDepth());
+    }
+    else if(actor instanceof RandomWalkZombie){
+      zombie = new RandomWalkZombie("textures/metal_texture.jpg",
+              "resources/Zombie2_Animated.txt",
+              actor.getLocation().getX()+0.1,
+              actor.getLocation().getY()+0.1,
+              actor.getWidth(), actor.getHeight(), actor.getDepth());
+    }
+    renderer.registerActor(zombie,
+            zombie.getRenderEntity(),
+            Color.BEIGE, // diffuse
+            Color.BEIGE, // specular
+            Color.WHITE); // ambient
+    world.add(zombie);
+    if(zombie instanceof LineWalkZombie){
+      renderer.mapTextureToActor("textures/rock_texture.jpg", zombie);
+    }
+    else if(zombie instanceof RandomWalkZombie){
+      renderer.mapTextureToActor("textures/metal_texture.jpg", zombie);
     }
   }
 }
