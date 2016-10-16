@@ -55,7 +55,7 @@ public class RandomWalkZombie extends Zombie
       if(elapsedSeconds > GlobalConstants.zombieDecisionRate)
       {
         elapsedSeconds = 0.0;
-        if(!canSmellPlayer(engine))
+        if(!canSmellPlayer())
         {
           // If the x/y directions are positive and set new direction is true,
           // it means that with the current heading the zombie collided with something,
@@ -114,7 +114,9 @@ public class RandomWalkZombie extends Zombie
           */
       }
 
-      if(canSmellPlayer(engine))
+      playerDistance(engine);
+
+      if(canSmellPlayer())
       {
         lookAt(engine.getWorld().getPlayer().getLocation().getX(), engine.getWorld().getPlayer().getLocation().getY());
       }
@@ -125,7 +127,7 @@ public class RandomWalkZombie extends Zombie
         currentHealth = startingHealth;
       }
 
-      if(((Player) engine.getWorld().getPlayer()).attacking() && isAttackable(engine))
+      if(((Player) engine.getWorld().getPlayer()).attacking() && isAttackable())
       {
         currentHealth -= 75.0 * deltaSeconds;
       }

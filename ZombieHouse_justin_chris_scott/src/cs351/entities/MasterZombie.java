@@ -56,7 +56,7 @@ public class MasterZombie extends Zombie {
     {
 
       elapsedSeconds = 0.0;
-      if (!canSmellPlayer(engine) && !foundPlayer)
+      if (!canSmellPlayer() && !foundPlayer)
       {
         // -100 to 100 / 20000.0
         xDirection = (100-rand.nextInt(200))/20000.0;
