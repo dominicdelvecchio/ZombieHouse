@@ -16,10 +16,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
 
-
 public class RandomWalkZombie extends Zombie
 {
-
   // initialize to something we set
   private double elapsedSeconds = 0;
   private Random rand = new Random();
@@ -49,6 +47,7 @@ public class RandomWalkZombie extends Zombie
   /**
    * Parameters are given from the Engine so that the appropriate
    * updates can be made
+   *
    * @param engine
    * @param deltaSeconds
    */
@@ -62,9 +61,8 @@ public class RandomWalkZombie extends Zombie
       // every zombieDecisionRate seconds, switch direction
       if(elapsedSeconds > GlobalConstants.zombieDecisionRate)
       {
-
         elapsedSeconds = 0.0;
-        if(!canSmellPlayer(engine))
+        if(!canSmellPlayer())
         {
           // If the x/y directions are positive and set new direction is true,
           // it means that with the current heading the zombie collided with something,
@@ -75,10 +73,22 @@ public class RandomWalkZombie extends Zombie
           yDirection = 1.0 - xDirection;
           // If shouldChooseNegativeX/Y are true, the zombie is forced to make the heading
           // choice negative - otherwise it makes it a random choice
-          if(shouldChooseNegativeX) xDirection = -xDirection;
-          else if(rand.nextInt(100) >= 50) xDirection = -xDirection;
-          if(shouldChooseNegativeY) yDirection = -yDirection;
-          else if(rand.nextInt(100) >= 50) yDirection = -yDirection;
+          if(shouldChooseNegativeX)
+          {
+            xDirection = -xDirection;
+          }
+          else if(rand.nextInt(100) >= 50)
+          {
+            xDirection = -xDirection;
+          }
+          if(shouldChooseNegativeY)
+          {
+            yDirection = -yDirection;
+          }
+          else if(rand.nextInt(100) >= 50)
+          {
+            yDirection = -yDirection;
+          }
           directionXY.set(xDirection, yDirection, 0.0);
         }
         else
@@ -86,16 +96,34 @@ public class RandomWalkZombie extends Zombie
           Point2D pt = super.PathfindToThePlayer(engine);
           xDirection = pt.getX();
           yDirection = pt.getY();
-          if(yDirection == 0.0 && xDirection != 0.0) xDirection = xDirection < 0.0 ? -1.0 : 1.0;
-          else if(xDirection != 0.0) xDirection = xDirection < 0.0 ? -0.5 : 0.5;
-          if(xDirection == 0.0 && yDirection != 0.0) yDirection = yDirection < 0.0 ? -1.0 : 1.0;
-          else if(yDirection != 0.0) yDirection = yDirection < 0.0 ? -0.5 : 0.5;
+          if(yDirection == 0.0 && xDirection != 0.0)
+          {
+            xDirection = xDirection < 0.0 ? -1.0 : 1.0;
+          }
+          else if(xDirection != 0.0)
+          {
+            xDirection = xDirection < 0.0 ? -0.5 : 0.5;
+          }
+          if(xDirection == 0.0 && yDirection != 0.0)
+          {
+            yDirection = yDirection < 0.0 ? -1.0 : 1.0;
+          }
+          else if(yDirection != 0.0)
+          {
+            yDirection = yDirection < 0.0 ? -0.5 : 0.5;
+          }
           directionXY.set(xDirection, yDirection, 0.0);
           ((MasterZombie) engine.getWorld().getMasterZombie()).detectPlayer();
         }
+          /*
+          bifurcate here using:
+          ((ZombieHouseEngine) engine).bifurcate(this);
+          */
       }
 
-      if(canSmellPlayer(engine))
+      playerDistance(engine);
+
+      if(canSmellPlayer())
       {
         playerMet = true;
         lookAt(engine.getWorld().getPlayer().getLocation().getX(), engine.getWorld().getPlayer().getLocation().getY());
@@ -107,7 +135,7 @@ public class RandomWalkZombie extends Zombie
         currentHealth = startingHealth;
       }
 
-      if(((Player) engine.getWorld().getPlayer()).attacking() && isAttackable(engine))
+      if(((Player) engine.getWorld().getPlayer()).attacking() && isAttackable())
       {
         currentHealth -= 75.0 * deltaSeconds;
       }

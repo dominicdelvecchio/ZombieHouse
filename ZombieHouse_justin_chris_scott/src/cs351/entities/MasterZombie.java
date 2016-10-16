@@ -56,7 +56,7 @@ public class MasterZombie extends Zombie {
     {
 
       elapsedSeconds = 0.0;
-      if (!canSmellPlayer(engine) && !foundPlayer)
+      if (!canSmellPlayer() && !foundPlayer)
       {
         // -100 to 100 / 20000.0
         xDirection = (100-rand.nextInt(200))/20000.0;
@@ -69,6 +69,10 @@ public class MasterZombie extends Zombie {
         Point2D pt = super.PathfindToThePlayer(engine);
         xDirection = pt.getX();
         yDirection = pt.getY();
+        if(yDirection == 0.0 && xDirection != 0.0) xDirection = xDirection < 0.0 ? -1.0 : 1.0;
+        else if(xDirection != 0.0) xDirection = xDirection < 0.0 ? -0.5 : 0.5;
+        if(xDirection == 0.0 && yDirection != 0.0) yDirection = yDirection < 0.0 ? -1.0 : 1.0;
+        else if(yDirection != 0.0) yDirection = yDirection < 0.0 ? -0.5 : 0.5;
         lookAt(engine.getWorld().getPlayer().getLocation().getX(), engine.getWorld().getPlayer().getLocation().getY());
       }
 

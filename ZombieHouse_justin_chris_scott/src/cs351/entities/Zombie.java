@@ -23,6 +23,8 @@ public class Zombie extends Actor
   private double soundTimer = 0.0;
   private double xDirection = 0;
   private double yDirection = 0;
+  private double distanceToPlayer = 1000.0;
+  private boolean metPlayer = false;
   private String[] sounds = { "sound/zombie_low.wav", "sound/zombie_chains_loud.wav", "sound/zombie_growl_intense.wav" };
   private String intenseSound = "sound/zombie_growl_intense.wav";
   private int currSound = 0;
@@ -218,15 +220,8 @@ public class Zombie extends Actor
 
    */
 
-  protected boolean canSmellPlayer(Engine engine)
+  protected boolean canSmellPlayer()
   {
-    int playerX = (int)engine.getWorld().getPlayer().getLocation().getX();
-    int playerY = (int)engine.getWorld().getPlayer().getLocation().getY();
-
-    double dx = playerX - getLocation().getX();
-    double dy = playerY - getLocation().getY();
-    int distanceToPlayer = (int)(Math.sqrt(dx*dx + dy*dy));
-
     if (distanceToPlayer <= GlobalConstants.zombieSmell)
     {
       return true;
@@ -237,14 +232,16 @@ public class Zombie extends Actor
     }   
   }
 
-  protected boolean isAttackable(Engine engine){
+  protected void playerDistance(Engine engine){
     double playerX = (int)engine.getWorld().getPlayer().getLocation().getX();
     double playerY = (int)engine.getWorld().getPlayer().getLocation().getY();
 
     double dx = playerX - getLocation().getX();
     double dy = playerY - getLocation().getY();
-    double distanceToPlayer = (int)(Math.sqrt(dx*dx + dy*dy));
+    distanceToPlayer = Math.sqrt(dx*dx + dy*dy);
+  }
 
+  protected boolean isAttackable(){
     if (distanceToPlayer <= 1)
     {
       return true;
@@ -255,7 +252,18 @@ public class Zombie extends Actor
     }
   }
 
+  protected boolean tooClose(){
+    if(distanceToPlayer > 2){
+      return false;
+    }
+    else return true;
+  }
+
   public void restoreHealth(){
     currentHealth = zombieHealth;
+  }
+
+  public void setMetPlayer(){
+    metPlayer = true;
   }
 }

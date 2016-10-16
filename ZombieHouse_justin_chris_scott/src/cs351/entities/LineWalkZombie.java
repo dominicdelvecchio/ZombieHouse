@@ -8,6 +8,7 @@ package cs351.entities;
 
 import java.util.LinkedList;
 import java.util.Random;
+
 import cs351.core.Engine;
 import cs351.core.GlobalConstants;
 import javafx.geometry.Point2D;
@@ -21,7 +22,6 @@ public class LineWalkZombie extends Zombie
   private Random rand = new Random();
   private double xDirection = 0.5;
   private double yDirection = 0.5;
-  private boolean metPlayer = false;
   private boolean zombieMemory = false;
   private boolean died = false;
   private double zombieTime = 0;
@@ -43,6 +43,7 @@ public class LineWalkZombie extends Zombie
   /**
    * Parameters are given from the Engine so that the appropriate
    * updates can be made
+   *
    * @param engine
    * @param deltaSeconds
    */
@@ -59,19 +60,15 @@ public class LineWalkZombie extends Zombie
       // every zombieDecisionRate seconds, switch direction
       if(elapsedSeconds > GlobalConstants.zombieDecisionRate)
       {
-
-
         elapsedSeconds = 0.0;
-        if(!canSmellPlayer(engine) && setNewDirection)
+        if(!canSmellPlayer() && setNewDirection)
         {
-
           setNewDirection = false;
           // left or right random
           xDirection = 0.5 - rand.nextInt(1000) / 1000.0;
           yDirection = 0.5 - rand.nextInt(1000) / 1000.0;
-
         }
-        else if(canSmellPlayer(engine))
+        else if(canSmellPlayer())
         {
           setNewDirection = false;
           Point2D pt = super.PathfindToThePlayer(engine);
@@ -96,9 +93,15 @@ public class LineWalkZombie extends Zombie
           // alert the master zombie
           ((MasterZombie) engine.getWorld().getMasterZombie()).detectPlayer();
         }
+          /*
+          bifurcate here using:
+          ((ZombieHouseEngine) engine).bifurcate(this);
+          */
       }
 
-      if(canSmellPlayer(engine))
+      playerDistance(engine);
+
+      if(canSmellPlayer())
       {
         lookAt(engine.getWorld().getPlayer().getLocation().getX(), engine.getWorld().getPlayer().getLocation().getY());
         rotation.setAngle(rotation.getAngle() + 180);
@@ -110,7 +113,7 @@ public class LineWalkZombie extends Zombie
         currentHealth = startingHealth;
       }
 
-      if(((Player) engine.getWorld().getPlayer()).attacking() && isAttackable(engine))
+      if(((Player) engine.getWorld().getPlayer()).attacking() && isAttackable())
       {
         currentHealth -= 75.0 * deltaSeconds;
       }
@@ -127,9 +130,8 @@ public class LineWalkZombie extends Zombie
       //zombieMapX.add(getLocation().getX());
       //zombieMapY.add(getLocation().getY());
 
-
       checkPlaySound(engine, deltaSeconds);
     }
-      return UpdateResult.UPDATE_COMPLETED;
+    return UpdateResult.UPDATE_COMPLETED;
   }
 }
