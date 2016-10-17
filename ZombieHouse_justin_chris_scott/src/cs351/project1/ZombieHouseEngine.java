@@ -306,7 +306,7 @@ public class ZombieHouseEngine implements Engine
   @Override
   public void frame()
   {
-    frameCount++;
+    
     //System.out.println("called");
     if (!isInitialized || isPaused || isPendingShutdown) return;
     // start the collision detection system's new frame
@@ -393,7 +393,7 @@ public class ZombieHouseEngine implements Engine
     {
       actor.setNoClip(true);
       actor.setShouldUpdate(false);
-      actor.setLocation(100, 100);
+      actor.setLocation(500, 500);
     }
     KILLED_ACTORS.clear();
   }
@@ -415,12 +415,12 @@ public class ZombieHouseEngine implements Engine
     else if (pendingLevelRestart)
     {
       restoreZombies();
-      frameCount = 0;
-      for (Actor actor : UPDATE_ACTORS)
+      
+      for (Actor actor : ALL_ACTORS)
       {
         if(actor instanceof Zombie)
         {
-          ((Zombie) actor).resetZombiie();
+          ((Zombie) actor).resetZombie();
         }
       }
       initEngineFromWorld(false);
@@ -540,7 +540,7 @@ public class ZombieHouseEngine implements Engine
       renderer.mapTextureToActor("textures/metal_texture.jpg", zombie);
     }
   }
-  public int getCurrentTime()
+  public int getFrameCount()
   {
     return frameCount;
   }
