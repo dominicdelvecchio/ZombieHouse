@@ -5,8 +5,6 @@ package cs351.entities;
  *
  * @author Scott Cooper
  */
-
-import java.util.LinkedList;
 import java.util.Random;
 
 import cs351.core.Engine;
