@@ -47,14 +47,16 @@ public class RandomWalkZombie extends Zombie
   {
     if(shouldUpdate)
     {
-      // totalSpeed represents the movement speed offset in tiles per second
+      if(!zombieMemory)
+      {
+  
       elapsedSeconds += deltaSeconds;
       double zombieSpeed = Double.parseDouble(engine.getSettings().getValue("zombie_speed"));
       // every zombieDecisionRate seconds, switch direction
-      if(elapsedSeconds > GlobalConstants.zombieDecisionRate)
+      if (elapsedSeconds > GlobalConstants.zombieDecisionRate)
       {
         elapsedSeconds = 0.0;
-        if(!canSmellPlayer())
+        if (!canSmellPlayer())
         {
           // If the x/y directions are positive and set new direction is true,
           // it means that with the current heading the zombie collided with something,
@@ -65,42 +67,37 @@ public class RandomWalkZombie extends Zombie
           yDirection = 1.0 - xDirection;
           // If shouldChooseNegativeX/Y are true, the zombie is forced to make the heading
           // choice negative - otherwise it makes it a random choice
-          if(shouldChooseNegativeX)
+          if (shouldChooseNegativeX)
+          {
+            xDirection = -xDirection;
+          } else if (rand.nextInt(100) >= 50)
           {
             xDirection = -xDirection;
           }
-          else if(rand.nextInt(100) >= 50)
-          {
-            xDirection = -xDirection;
-          }
-          if(shouldChooseNegativeY)
+          if (shouldChooseNegativeY)
           {
             yDirection = -yDirection;
-          }
-          else if(rand.nextInt(100) >= 50)
+          } else if (rand.nextInt(100) >= 50)
           {
             yDirection = -yDirection;
           }
           directionXY.set(xDirection, yDirection, 0.0);
-        }
-        else
+        } else
         {
           Point2D pt = super.PathfindToThePlayer(engine);
           xDirection = pt.getX();
           yDirection = pt.getY();
-          if(yDirection == 0.0 && xDirection != 0.0)
+          if (yDirection == 0.0 && xDirection != 0.0)
           {
             xDirection = xDirection < 0.0 ? -1.0 : 1.0;
-          }
-          else if(xDirection != 0.0)
+          } else if (xDirection != 0.0)
           {
             xDirection = xDirection < 0.0 ? -0.5 : 0.5;
           }
-          if(xDirection == 0.0 && yDirection != 0.0)
+          if (xDirection == 0.0 && yDirection != 0.0)
           {
             yDirection = yDirection < 0.0 ? -1.0 : 1.0;
-          }
-          else if(yDirection != 0.0)
+          } else if (yDirection != 0.0)
           {
             yDirection = yDirection < 0.0 ? -0.5 : 0.5;
           }
@@ -112,50 +109,57 @@ public class RandomWalkZombie extends Zombie
           ((ZombieHouseEngine) engine).bifurcate(this);
           */
       }
-
+  
       playerDistance(engine);
-
-      if(canSmellPlayer())
+  
+      if (canSmellPlayer())
       {
-        playerMet = true;
+  
+        //if(!playerMet){zombieTime = currentTime;}
+        //playerMet = true;
         lookAt(engine.getWorld().getPlayer().getLocation().getX(), engine.getWorld().getPlayer().getLocation().getY());
       }
-
-      if(startingHealth < 0.0)
+  
+      double totalSpeed = zombieSpeed * deltaSeconds;
+      setLocation(getLocation().getX() + directionXY.getX() * totalSpeed,
+              getLocation().getY() + directionXY.getY() * totalSpeed);
+  
+      recordZombie();
+    }
+    
+    else if(move < movement) {moveZombiePast();}
+      
+      
+      else if(zombieHasDied) {((ZombieHouseEngine) engine).killZombie(this);}
+      else{zombieMemory=false;}
+      
+      if (startingHealth < 0.0)
       {
         startingHealth = zombieHealth;
         currentHealth = startingHealth;
       }
-
-      if(((Player) engine.getWorld().getPlayer()).attacking() && isAttackable())
+  
+      if (((Player) engine.getWorld().getPlayer()).attacking() && isAttackable())
       {
         currentHealth -= 75.0 * deltaSeconds;
+        playerMet = true;
+        //zombieMemory = true;
       }
-
-      if(currentHealth <= 0)
+  
+      if (currentHealth <= 0)
       {
+        ((ZombieHouseEngine) engine).killZombie(this);
         zombieHasDied = true;
-        ((ZombieHouseEngine) engine).killZombie(this);
-      }
-      
-      if(zombieTime > currentTime) {moveZombiePast();}
-      
-      else
-      {
-        double totalSpeed = zombieSpeed * deltaSeconds;
-        setLocation(getLocation().getX() + directionXY.getX() * totalSpeed,
-                getLocation().getY() + directionXY.getY() * totalSpeed);
-      }
-      
-      if(move > movement && zombieHasDied)
-      {
-        ((ZombieHouseEngine) engine).killZombie(this);
-      }
-      if(playerMet && !playerHasDied) {recordZombie();}
         
-      if(!playerMet){zombieTime = (zombieTime+deltaSeconds);}
-      currentTime = (currentTime + deltaSeconds);
+      }
+  
+      
+      
+     
+    
+      
       checkPlaySound(engine, deltaSeconds);
+      
       
       
     }
@@ -163,11 +167,8 @@ public class RandomWalkZombie extends Zombie
   }
   protected void moveZombiePast()
   {
-    if (move < movement)
-    {
-      setLocation(zombieMapX.get(move), zombieMapY.get(move));
-      move++;
-    }
+    setLocation(zombieMapX.get(move), zombieMapY.get(move));
+    move++;
   }
     
   }
