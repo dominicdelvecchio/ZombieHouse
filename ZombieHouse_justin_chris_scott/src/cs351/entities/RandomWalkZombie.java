@@ -165,11 +165,7 @@ public class RandomWalkZombie extends Zombie
     }
     return UpdateResult.UPDATE_COMPLETED;
   }
-  protected void moveZombiePast()
-  {
-    setLocation(zombieMapX.get(move), zombieMapY.get(move));
-    move++;
-  }
+  
     
   }
   
