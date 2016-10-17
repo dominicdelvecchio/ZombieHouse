@@ -109,7 +109,7 @@ public class Player extends Actor
 
     lastAttack += deltaSeconds;
 //    System.out.println("shouldAttack = " + shouldAttack + ", lastAttack = " + lastAttack);
-    if(lastAttack >= .5){
+    if(lastAttack >= .3){
       if(shouldAttack)
       {
         isAttacking = true;
