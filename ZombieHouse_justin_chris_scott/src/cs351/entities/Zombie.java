@@ -249,6 +249,7 @@ public class Zombie extends Actor
   protected void playerDistance(Engine engine){
     double playerX = (int)engine.getWorld().getPlayer().getLocation().getX();
     double playerY = (int)engine.getWorld().getPlayer().getLocation().getY();
+    
 
     double dx = playerX - getLocation().getX();
     double dy = playerY - getLocation().getY();
@@ -256,7 +257,7 @@ public class Zombie extends Actor
   }
 
   protected boolean isAttackable(){
-    if (distanceToPlayer <= 2)
+    if (distanceToPlayer <= 1.5)
     {
       return true;
     }

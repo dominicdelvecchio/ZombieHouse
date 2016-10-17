@@ -141,7 +141,7 @@ public class RandomWalkZombie extends Zombie
         currentHealth -= 150.0 * deltaSeconds;
         attackCount++;
         System.out.println("ATTACK SUCCESSFUL" + attackCount);
-        setLocation(getLocation().getX()-directionXY.getX(),getLocation().getY()-directionXY.getY());
+        setLocation((getLocation().getX()-directionXY.getX()),getLocation().getY()-directionXY.getY());
         playerMet = true;
         if(zombieMemory)
         {
