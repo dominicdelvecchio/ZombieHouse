@@ -33,7 +33,8 @@ public class Zombie extends Actor
   protected LinkedList<Double> zombieMapX = new LinkedList<Double>();
   protected LinkedList<Double> zombieMapY = new LinkedList<Double>();
   protected boolean playerMet = false;
-  protected boolean playerHasDied = false;
+  protected boolean shouldBifurcate = false;
+  protected boolean hasBifurcated = false;
   protected boolean zombieMemory = false;
   protected boolean zombieHasDied = false;
   protected int movement = 0;
@@ -251,7 +252,7 @@ public class Zombie extends Actor
   }
 
   protected boolean isAttackable(){
-    if (distanceToPlayer <= 1.5)
+    if (distanceToPlayer <= 2)
     {
       return true;
     }
@@ -288,6 +289,7 @@ public class Zombie extends Actor
     {
       move = 0;
       zombieMemory = true;
+      hasBifurcated = false;
     }
   }
   
