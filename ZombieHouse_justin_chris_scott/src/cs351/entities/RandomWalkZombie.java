@@ -126,10 +126,7 @@ public class RandomWalkZombie extends Zombie
   
       recordZombie();
     }
-    
     else if(move < movement) {moveZombiePast();}
-      
-      
       else if(zombieHasDied) {((ZombieHouseEngine) engine).killZombie(this);}
       else{zombieMemory=false;}
       
@@ -150,18 +147,9 @@ public class RandomWalkZombie extends Zombie
       {
         ((ZombieHouseEngine) engine).killZombie(this);
         zombieHasDied = true;
-        
       }
-  
-      
-      
-     
-    
       
       checkPlaySound(engine, deltaSeconds);
-      
-      
-      
     }
     return UpdateResult.UPDATE_COMPLETED;
   }
