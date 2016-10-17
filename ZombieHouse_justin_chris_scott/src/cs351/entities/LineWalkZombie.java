@@ -22,24 +22,16 @@ public class LineWalkZombie extends Zombie
   private Random rand = new Random();
   private double xDirection = 0.5;
   private double yDirection = 0.5;
-  private boolean zombieMemory = false;
-  private boolean died = false;
-  private double zombieTime = 0;
-  private double timeMetPlayer;
-  private double activateMemory;
-  private LinkedList<Double> zombieMapX = new LinkedList<Double>();
-  private LinkedList<Double> zombieMapY = new LinkedList<Double>();
-
   public LineWalkZombie(String textureFile, double x, double y, int width, int height, int depth)
   {
     super(textureFile, x, y, width, height, depth);
   }
-
+  
   public LineWalkZombie(String textureFile, String modelFile, double x, double y, int width, int height, int depth)
   {
     super(textureFile, modelFile, x, y, width, height, depth);
   }
-
+  
   /**
    * Parameters are given from the Engine so that the appropriate
    * updates can be made
@@ -49,87 +41,99 @@ public class LineWalkZombie extends Zombie
    */
   public UpdateResult update(Engine engine, double deltaSeconds)
   {
-    if(shouldUpdate)
+    if (shouldUpdate)
     {
-      zombieTime = zombieTime + deltaSeconds;
-      double zombieSpeed = Double.parseDouble(engine.getSettings().getValue("zombie_speed"));
-
-      // totalSpeed represents the movement speed offset in tiles per second
-      elapsedSeconds += deltaSeconds;
-
-      // every zombieDecisionRate seconds, switch direction
-      if(elapsedSeconds > GlobalConstants.zombieDecisionRate)
+      if (!zombieMemory)
       {
-        elapsedSeconds = 0.0;
-        if(!canSmellPlayer() && setNewDirection)
+        double zombieSpeed = Double.parseDouble(engine.getSettings().getValue("zombie_speed"));
+        
+        // totalSpeed represents the movement speed offset in tiles per second
+        elapsedSeconds += deltaSeconds;
+        
+        // every zombieDecisionRate seconds, switch direction
+        if (elapsedSeconds > GlobalConstants.zombieDecisionRate)
         {
-          setNewDirection = false;
-          // left or right random
-          xDirection = 0.5 - rand.nextInt(1000) / 1000.0;
-          yDirection = 0.5 - rand.nextInt(1000) / 1000.0;
-        }
-        else if(canSmellPlayer())
-        {
-          setNewDirection = false;
-          Point2D pt = super.PathfindToThePlayer(engine);
-          xDirection = pt.getX();
-          yDirection = pt.getY();
-          if(yDirection == 0.0 && xDirection != 0.0)
+          elapsedSeconds = 0.0;
+          if (!canSmellPlayer() && setNewDirection)
           {
-            xDirection = xDirection < 0.0 ? -1.0 : 1.0;
-          }
-          else if(xDirection != 0.0)
+            setNewDirection = false;
+            // left or right random
+            xDirection = 0.5 - rand.nextInt(1000) / 1000.0;
+            yDirection = 0.5 - rand.nextInt(1000) / 1000.0;
+          } else if (canSmellPlayer())
           {
-            xDirection = xDirection < 0.0 ? -0.5 : 0.5;
+            setNewDirection = false;
+            Point2D pt = super.PathfindToThePlayer(engine);
+            xDirection = pt.getX();
+            yDirection = pt.getY();
+            if (yDirection == 0.0 && xDirection != 0.0)
+            {
+              xDirection = xDirection < 0.0 ? -1.0 : 1.0;
+            } else if (xDirection != 0.0)
+            {
+              xDirection = xDirection < 0.0 ? -0.5 : 0.5;
+            }
+            if (xDirection == 0.0 && yDirection != 0.0)
+            {
+              yDirection = yDirection < 0.0 ? -1.0 : 1.0;
+            } else if (yDirection != 0.0)
+            {
+              yDirection = yDirection < 0.0 ? -0.5 : 0.5;
+            }
+            // alert the master zombie
+            ((MasterZombie) engine.getWorld().getMasterZombie()).detectPlayer();
           }
-          if(xDirection == 0.0 && yDirection != 0.0)
-          {
-            yDirection = yDirection < 0.0 ? -1.0 : 1.0;
-          }
-          else if(yDirection != 0.0)
-          {
-            yDirection = yDirection < 0.0 ? -0.5 : 0.5;
-          }
-          // alert the master zombie
-          ((MasterZombie) engine.getWorld().getMasterZombie()).detectPlayer();
-        }
           /*
           bifurcate here using:
           ((ZombieHouseEngine) engine).bifurcate(this);
           */
+        }
+        
+        playerDistance(engine);
+        
+        if (canSmellPlayer())
+        {
+          lookAt(engine.getWorld().getPlayer().getLocation().getX(), engine.getWorld().getPlayer().getLocation().getY());
+          rotation.setAngle(rotation.getAngle() + 180);
+        }
+        
+        double totalSpeed = zombieSpeed * deltaSeconds;
+        setLocation(getLocation().getX() + xDirection * totalSpeed,
+                getLocation().getY() + yDirection * totalSpeed);
+        
+        recordZombie();
       }
-
-      playerDistance(engine);
-
-      if(canSmellPlayer())
+      else if (move < movement)
       {
-        lookAt(engine.getWorld().getPlayer().getLocation().getX(), engine.getWorld().getPlayer().getLocation().getY());
-        rotation.setAngle(rotation.getAngle() + 180);
+        moveZombiePast();
       }
-
-      if(startingHealth < 0.0)
+      else if (zombieHasDied)
+      {
+        ((ZombieHouseEngine) engine).killZombie(this);
+      }
+      else
+      {
+        zombieMemory = false;
+      }
+      
+      
+      if (startingHealth < 0.0)
       {
         startingHealth = zombieHealth;
         currentHealth = startingHealth;
       }
-
-      if(((Player) engine.getWorld().getPlayer()).attacking() && isAttackable())
+      
+      if (((Player) engine.getWorld().getPlayer()).attacking() && isAttackable())
       {
         currentHealth -= 75.0 * deltaSeconds;
+        playerMet = true;
       }
-
-      if(currentHealth <= 0)
+      
+      if (currentHealth <= 0)
       {
         ((ZombieHouseEngine) engine).killZombie(this);
+        zombieHasDied = true;
       }
-
-      double totalSpeed = zombieSpeed * deltaSeconds;
-      setLocation(getLocation().getX() + xDirection * totalSpeed,
-              getLocation().getY() + yDirection * totalSpeed);
-
-      //zombieMapX.add(getLocation().getX());
-      //zombieMapY.add(getLocation().getY());
-
       checkPlaySound(engine, deltaSeconds);
     }
     return UpdateResult.UPDATE_COMPLETED;
