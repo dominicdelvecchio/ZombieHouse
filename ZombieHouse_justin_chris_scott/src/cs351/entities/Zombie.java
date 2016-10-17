@@ -30,13 +30,14 @@ public class Zombie extends Actor
   private int currSound = 0;
   protected boolean setNewDirection = true;
   protected double zombieHealth = 20.0;
-  private LinkedList<Double> zombieMapX = new LinkedList<Double>();
-  private LinkedList<Double> zombieMapY = new LinkedList<Double>();
+  protected LinkedList<Double> zombieMapX = new LinkedList<Double>();
+  protected LinkedList<Double> zombieMapY = new LinkedList<Double>();
   protected double zombieTime = 0.0;
   protected double currentTime = 0.0;;
   protected boolean playerMet = false;
   protected boolean playerHasDied = false;
-  private int movement = 0;
+  protected boolean zombieHasDied = false;
+  protected int movement = 0;
   protected int move = 0;
   
 
@@ -282,12 +283,12 @@ public class Zombie extends Actor
     zombieMapY.add(getLocation().getY());
   }
   
-  protected void moveZombiePast()
+  public void resetZombiie()
   {
-    if (move < movement)
+    if(playerMet)
     {
-      setLocation(zombieMapX.get(move), zombieMapY.get(move));
-      move++;
+      playerHasDied = true;
+      move = 0;
     }
   }
   
