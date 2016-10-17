@@ -411,6 +411,7 @@ public class ZombieHouseEngine implements Engine
     }
     else if (pendingLevelRestart)
     {
+      //Sound for player's death
       getSoundEngine().queueSoundAtLocation(deathSound,
               getWorld().getPlayer().getLocation().getY(), getWorld().getPlayer().getLocation().getY());
       restoreZombies();
