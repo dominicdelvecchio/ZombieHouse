@@ -46,6 +46,7 @@ public class Ghost extends Actor
     {
       x = (double) ghostMapX.get(move);
       y = (double) ghostMapY.get(move);
+      lookAt(x, y);
       //System.out.println("x = " +x+ " and y = " + y);
       //System.out.println("move = " +move);
       setLocation(x,y);
