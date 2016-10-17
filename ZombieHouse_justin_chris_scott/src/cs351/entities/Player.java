@@ -104,6 +104,8 @@ public class Player extends Actor
       {
         engine.getSoundEngine().queueSoundAtLocation("sound/player_step.wav", stepLocX, stepLocY);
       }
+
+
       //engine.getSoundEngine().queueSoundAtLocation("sound/zombie_low.wav", getLocation().getX(), getLocation().getY());
     }
 
