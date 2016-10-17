@@ -40,6 +40,7 @@ public class ZombieHouseEngine implements Engine
   int ghostMovement2 = 0;
   int ghostMovement3 = 0;
   private int frameCount = 0;
+  private String deathSound = "sound/death.wav";
 
   
   // pendingLevelRestart and pendingNextLevel let the engine know if it needs to do something
@@ -243,10 +244,6 @@ public class ZombieHouseEngine implements Engine
       getWorld().getGhost(2).setMove(0);
       getWorld().getGhost(3).setMove(0);
     }
-
-
-
-
   }
 
   @Override
@@ -414,6 +411,8 @@ public class ZombieHouseEngine implements Engine
     }
     else if (pendingLevelRestart)
     {
+      getSoundEngine().queueSoundAtLocation(deathSound,
+              getWorld().getPlayer().getLocation().getY(), getWorld().getPlayer().getLocation().getY());
       restoreZombies();
       frameCount = 0;
       for (Actor actor : UPDATE_ACTORS)

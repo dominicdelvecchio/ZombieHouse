@@ -25,7 +25,8 @@ public class Zombie extends Actor
   private double xDirection = 0;
   private double yDirection = 0;
   private double distanceToPlayer = 1000.0;
-  private String[] sounds = { "sound/zombie_low.wav", "sound/zombie_chains_loud.wav", "sound/zombie_growl_intense.wav" };
+  private String[] sounds = { "sound/zombie_low.wav", "sound/zombie_chains_loud.wav",
+          "sound/zombie_growl_intense.wav"};
   private String intenseSound = "sound/zombie_growl_intense.wav";
   private int currSound = 0;
   protected boolean setNewDirection = true;
@@ -194,6 +195,8 @@ public class Zombie extends Actor
       {
         engine.getSoundEngine().queueSoundAtLocation(sounds[currSound], getLocation().getX(), getLocation().getY());
       }
+
+
       currSound++;
       if (currSound >= sounds.length) currSound = 0;
     }
