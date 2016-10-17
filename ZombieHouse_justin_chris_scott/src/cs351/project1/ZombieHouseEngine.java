@@ -39,6 +39,7 @@ public class ZombieHouseEngine implements Engine
   int ghostMovement1 = 0;
   int ghostMovement2 = 0;
   int ghostMovement3 = 0;
+  private int frameCount = 0;
 
   
   // pendingLevelRestart and pendingNextLevel let the engine know if it needs to do something
@@ -305,6 +306,7 @@ public class ZombieHouseEngine implements Engine
   @Override
   public void frame()
   {
+    frameCount++;
     //System.out.println("called");
     if (!isInitialized || isPaused || isPendingShutdown) return;
     // start the collision detection system's new frame
@@ -413,6 +415,14 @@ public class ZombieHouseEngine implements Engine
     else if (pendingLevelRestart)
     {
       restoreZombies();
+      frameCount = 0;
+      for (Actor actor : UPDATE_ACTORS)
+      {
+        if(actor instanceof Zombie)
+        {
+          ((Zombie) actor).resetZombiie();
+        }
+      }
       initEngineFromWorld(false);
       pendingLevelRestart = false;
     }
@@ -529,5 +539,9 @@ public class ZombieHouseEngine implements Engine
     else if(zombie instanceof RandomWalkZombie){
       renderer.mapTextureToActor("textures/metal_texture.jpg", zombie);
     }
+  }
+  public int getCurrentTime()
+  {
+    return frameCount;
   }
 }
