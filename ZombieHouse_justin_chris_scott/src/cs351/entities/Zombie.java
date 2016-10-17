@@ -251,7 +251,7 @@ public class Zombie extends Actor
   }
 
   protected boolean isAttackable(){
-    if (distanceToPlayer < 2)
+    if (distanceToPlayer <= 1.5)
     {
       return true;
     }
@@ -289,6 +289,12 @@ public class Zombie extends Actor
       move = 0;
       zombieMemory = true;
     }
+  }
+  
+  protected void moveZombiePast()
+  {
+    setLocation(zombieMapX.get(move), zombieMapY.get(move));
+    move++;
   }
   
 }
