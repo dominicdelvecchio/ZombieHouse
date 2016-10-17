@@ -109,7 +109,7 @@ public class Player extends Actor
 
     lastAttack += deltaSeconds;
 //    System.out.println("shouldAttack = " + shouldAttack + ", lastAttack = " + lastAttack);
-    if(lastAttack >= .3){
+    if(lastAttack >= 2){
       if(shouldAttack)
       {
         isAttacking = true;
@@ -137,7 +137,10 @@ public class Player extends Actor
     {
       ((Zombie) actor).playerMet = true;
       //((Zombie) actor).zombieMemory =true;
-      ++numAttackingZombies;
+      //if(!((Zombie) actor).zombieMemory)
+      //{
+        ++numAttackingZombies;
+      //}
     }
   }
 
