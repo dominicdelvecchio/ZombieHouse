@@ -134,6 +134,7 @@ public class RandomWalkZombie extends Zombie
 
       if(currentHealth <= 0)
       {
+        zombieHasDied = true;
         ((ZombieHouseEngine) engine).killZombie(this);
       }
       
@@ -146,24 +147,28 @@ public class RandomWalkZombie extends Zombie
                 getLocation().getY() + directionXY.getY() * totalSpeed);
       }
       
+      if(move > movement && zombieHasDied)
+      {
+        ((ZombieHouseEngine) engine).killZombie(this);
+      }
       if(playerMet && !playerHasDied) {recordZombie();}
         
       if(!playerMet){zombieTime = (zombieTime+deltaSeconds);}
       currentTime = (currentTime + deltaSeconds);
       checkPlaySound(engine, deltaSeconds);
       
-      if(((Player) engine.getWorld().getPlayer()).getCurrentHealth() <= 0.0)
-      {
-        playerHasDied = true;
-        currentTime = 0.0;
-        move = 0;
-        
-      }
       
     }
     return UpdateResult.UPDATE_COMPLETED;
   }
-  
+  protected void moveZombiePast()
+  {
+    if (move < movement)
+    {
+      setLocation(zombieMapX.get(move), zombieMapY.get(move));
+      move++;
+    }
+  }
     
   }
   
