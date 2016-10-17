@@ -32,10 +32,9 @@ public class Zombie extends Actor
   protected double zombieHealth = 20.0;
   protected LinkedList<Double> zombieMapX = new LinkedList<Double>();
   protected LinkedList<Double> zombieMapY = new LinkedList<Double>();
-  protected double zombieTime = 0.0;
-  protected double currentTime = 0.0;;
   protected boolean playerMet = false;
   protected boolean playerHasDied = false;
+  protected boolean zombieMemory = false;
   protected boolean zombieHasDied = false;
   protected int movement = 0;
   protected int move = 0;
@@ -252,7 +251,7 @@ public class Zombie extends Actor
   }
 
   protected boolean isAttackable(){
-    if (distanceToPlayer <= 1)
+    if (distanceToPlayer < 2)
     {
       return true;
     }
@@ -283,12 +282,12 @@ public class Zombie extends Actor
     zombieMapY.add(getLocation().getY());
   }
   
-  public void resetZombiie()
+  public void resetZombie()
   {
     if(playerMet)
     {
-      playerHasDied = true;
       move = 0;
+      zombieMemory = true;
     }
   }
   
