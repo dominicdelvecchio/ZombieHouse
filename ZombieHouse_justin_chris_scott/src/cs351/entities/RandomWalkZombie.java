@@ -140,7 +140,18 @@ public class RandomWalkZombie extends Zombie
       {
         currentHealth -= 75.0 * deltaSeconds;
         playerMet = true;
+        if(zombieMemory)
+        {
+          shouldBifurcate = true; System.out.println("ATTACK SUCCESSFUL");
+          
+        }
         //zombieMemory = true;
+      }
+      if(shouldBifurcate && !hasBifurcated)
+      {
+        ((ZombieHouseEngine) engine).bifurcate(this);
+        shouldBifurcate = false;
+        hasBifurcated = true;
       }
   
       if (currentHealth <= 0)
