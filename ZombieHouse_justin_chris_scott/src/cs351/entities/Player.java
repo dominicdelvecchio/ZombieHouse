@@ -135,6 +135,8 @@ public class Player extends Actor
   {
     if(actor instanceof Zombie)
     {
+      ((Zombie) actor).playerMet = true;
+      //((Zombie) actor).zombieMemory =true;
       ++numAttackingZombies;
     }
   }
