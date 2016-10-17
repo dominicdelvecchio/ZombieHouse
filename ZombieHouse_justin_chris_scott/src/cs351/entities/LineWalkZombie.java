@@ -132,7 +132,7 @@ public class LineWalkZombie extends Zombie
         currentHealth -= 150.0 * deltaSeconds;
         attackCount++;
         System.out.println("ATTACK SUCCESSFUL" +attackCount);
-        setLocation(getLocation().getX()-.1,getLocation().getY()-.1);
+        setLocation(getLocation().getX()- xDirection,getLocation().getY()-yDirection);
         playerMet = true;
         if(zombieMemory)
         {
