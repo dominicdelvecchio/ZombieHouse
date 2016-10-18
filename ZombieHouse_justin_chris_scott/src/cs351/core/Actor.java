@@ -35,7 +35,8 @@ public abstract class Actor
   protected Vector3 direction = new Vector3(0.0);
   protected double startingHealth = -1.0;
   protected double currentHealth;
-
+  
+  
   /**
    * UpdateResult contains a few different enum values that each Actor can use
    * to tell the Engine how the update went.
