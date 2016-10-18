@@ -156,7 +156,8 @@ public class Player extends Actor
   
     if (((Zombie) actor).getShouldBifurcate() && !((Zombie) actor).getHasBifurcated())
     {
-       engine.bifurcate(this);
+//       engine.bifurcate(this);
+      ((ZombieHouseEngine) engine).bifurcate(actor);
       ((Zombie) actor).setShouldBifurcate(false);
       ((Zombie) actor).setHasBifurcated(true);
       ((Zombie) actor).setNoClip(true);

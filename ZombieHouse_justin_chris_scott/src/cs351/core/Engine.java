@@ -144,5 +144,5 @@ public interface Engine
   void frame();
   
   
-  public void bifurcate(Actor actor);
+  
 }
