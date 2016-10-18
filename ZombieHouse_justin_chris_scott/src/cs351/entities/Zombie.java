@@ -33,6 +33,7 @@ public class Zombie extends Actor
   protected double zombieHealth = 20.0;
   protected LinkedList<Double> zombieMapX = new LinkedList<Double>();
   protected LinkedList<Double> zombieMapY = new LinkedList<Double>();
+  protected LinkedList<Double> zombieHistoricHealth = new LinkedList<>();
   protected boolean playerMet = false;
   protected boolean shouldBifurcate = false;
   protected boolean hasBifurcated = false;
@@ -40,8 +41,7 @@ public class Zombie extends Actor
   protected boolean zombieHasDied = false;
   protected int movement = 0;
   protected int move = 0;
-  
-  
+
 
   public Zombie(String textureFile, double x, double y, int width, int height, int depth)
   {
@@ -87,7 +87,6 @@ public class Zombie extends Actor
       }
     }
 
-
     Node pt = null;
     if ((aNodeList!=null)&&(aNodeList.size() > 1))
     {
@@ -102,11 +101,9 @@ public class Zombie extends Actor
       }
     }
 
-
     // if we have a path to player and can smell him
     if (pt!=null)
     {
-
       if ( (int)pt.x > (int)currX) 
       {
         xDirection = 0.02;
@@ -128,17 +125,13 @@ public class Zombie extends Actor
       {
         yDirection = 0;        
       }
-
       result=new Point2D(xDirection,yDirection);
     } else
     {
       result = new Point2D(0,0);
     }
-
     return result;
   } 
-
-
 
   /**
    *  This method communicates with the engine, and sends 
@@ -160,13 +153,10 @@ public class Zombie extends Actor
       // -5.0 to 5.0
       yDirection = (100-rand.nextInt(200))/20000.0;
     }
-
-
     setLocation(getLocation().getX()+xDirection, getLocation().getY() +yDirection);
 
     checkPlaySound(engine, deltaSeconds);
     return UpdateResult.UPDATE_COMPLETED;
-
   }
 
   /**
@@ -196,8 +186,6 @@ public class Zombie extends Actor
       {
         engine.getSoundEngine().queueSoundAtLocation(sounds[currSound], getLocation().getX(), getLocation().getY());
       }
-
-
       currSound++;
       if (currSound >= sounds.length) currSound = 0;
     }
@@ -216,7 +204,6 @@ public class Zombie extends Actor
     {
       setNewDirection = true;
     }    // direction should be maintained if floor or if we hit player
-
   }
 
   /*
@@ -230,9 +217,7 @@ public class Zombie extends Actor
   3) If either a Random Walk or Line Walk zombies smells a
   player, then on the next decision update, the zombie will
   calculate the shortest path and adjust its heading to match.
-
-
-   */
+ */
 
   protected boolean canSmellPlayer()
   {
@@ -250,12 +235,16 @@ public class Zombie extends Actor
     double playerX = (int)engine.getWorld().getPlayer().getLocation().getX();
     double playerY = (int)engine.getWorld().getPlayer().getLocation().getY();
     
-
     double dx = playerX - getLocation().getX();
     double dy = playerY - getLocation().getY();
     distanceToPlayer = Math.sqrt(dx*dx + dy*dy);
   }
 
+  /**
+   *  Returns true if the zombie is in attacking range
+   *
+   *  @return Whether the zombie is attackable and may take damage
+   */
   protected boolean isAttackable(){
     if (distanceToPlayer <= 1.5)
     {
@@ -267,25 +256,16 @@ public class Zombie extends Actor
     }
   }
 
-  protected boolean tooClose(){
-    if(distanceToPlayer > 10){
-      return false;
-    }
-    else return true;
-  }
-
   public void restoreHealth(){
     currentHealth = zombieHealth;
   }
 
-  /*public void setMetPlayer(){
-    metPlayer = true;
-  }*/
   protected void recordZombie()
   {
     movement++;
     zombieMapX.add(getLocation().getX());
     zombieMapY.add(getLocation().getY());
+    zombieHistoricHealth.add(currentHealth);
   }
   
   public void resetZombie()
@@ -301,6 +281,7 @@ public class Zombie extends Actor
   protected void moveZombiePast()
   {
     setLocation(zombieMapX.get(move), zombieMapY.get(move));
+    currentHealth = zombieHistoricHealth.get(move);
     move++;
   }
   

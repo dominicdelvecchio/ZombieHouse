@@ -92,58 +92,23 @@ public class MasterZombie extends Zombie {
       rotation.setAngle(rotation.getAngle() + 180);
       moveZombiePast();
     }
-    else if(zombieHasDied)
-    {
-      ((ZombieHouseEngine) engine).killZombie(this);
-    }
     else
     {
       zombieMemory = false;
     }
-    
-    if(startingHealth < 0.0)
-    {
-      startingHealth = zombieHealth;
-      currentHealth = startingHealth;
-    }
-  
+
     if(((Player) engine.getWorld().getPlayer()).attacking() && isAttackable())
     {
-      currentHealth -= 150.0 * deltaSeconds;
-      //attackCount++;
       System.out.println("ATTACK SUCCESSFUL");
 
-      engine.getSoundEngine().queueSoundAtLocation("sound/attack.wav", getLocation().getX()- xDirection,
+      engine.getSoundEngine().queueSoundAtLocation("sound/attacked.wav", getLocation().getX()- xDirection,
               getLocation().getY()- yDirection);
       setLocation(getLocation().getX()- xDirection,getLocation().getY()-yDirection);
       playerMet = true;
-      if(zombieMemory)
-      {
-        shouldBifurcate = true;
-      }
     }
-  
-    if(shouldBifurcate && !hasBifurcated)
-    {
-      ((ZombieHouseEngine) engine).bifurcate(this);
-      System.out.println("Bifurcate");
-      shouldBifurcate = false;
-      hasBifurcated = true;
-    
-    }
-  
-    if(currentHealth <= 0)
-    {
-      ((ZombieHouseEngine) engine).killZombie(this);
-      zombieHasDied = true;
-    }
-
 
     checkPlaySound(engine, deltaSeconds);
     return UpdateResult.UPDATE_COMPLETED;
-
-
-
   }
   
 }
