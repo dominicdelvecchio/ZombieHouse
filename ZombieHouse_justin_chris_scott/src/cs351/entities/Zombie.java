@@ -33,7 +33,6 @@ public class Zombie extends Actor
   protected double zombieHealth = 20.0;
   protected LinkedList<Double> zombieMapX = new LinkedList<Double>();
   protected LinkedList<Double> zombieMapY = new LinkedList<Double>();
-  //protected LinkedList<Double> zombieHistoricHealth = new LinkedList<>();
   protected boolean playerMet = false;
   protected boolean shouldBifurcate = false;
   protected boolean hasBifurcated = false;
@@ -265,7 +264,6 @@ public class Zombie extends Actor
     movement++;
     zombieMapX.add(getLocation().getX());
     zombieMapY.add(getLocation().getY());
-    //zombieHistoricHealth.add(currentHealth);
   }
   
   public void resetZombie()
@@ -281,7 +279,6 @@ public class Zombie extends Actor
   protected void moveZombiePast()
   {
     setLocation(zombieMapX.get(move), zombieMapY.get(move));
-    //currentHealth = zombieHistoricHealth.get(move);
     move++;
   }
   
