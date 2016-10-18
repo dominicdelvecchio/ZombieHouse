@@ -98,11 +98,12 @@ public class Player extends Actor
       stepLocY = getLocation().getY() + multiplier * rightDirection.getY();
       if(isRunning)
       {
-        engine.getSoundEngine().queueSoundAtLocation("sound/player_step.wav", stepLocX, stepLocY, 2.0, 3.0);
+        //engine.getSoundEngine().queueSoundAtLocation("sound/footstep_running.wav", stepLocX, stepLocY);
+        engine.getSoundEngine().queueSoundAtLocation("sound/footstep_walk.wav", stepLocX, stepLocY, 4.0, 0.9);
       }
       else
       {
-        engine.getSoundEngine().queueSoundAtLocation("sound/player_step.wav", stepLocX, stepLocY);
+        engine.getSoundEngine().queueSoundAtLocation("sound/footstep_walk.wav", stepLocX, stepLocY, 3.0, 0.6);
       }
 
 
