@@ -246,7 +246,7 @@ public class Zombie extends Actor
    *  @return Whether the zombie is attackable and may take damage
    */
   protected boolean isAttackable(){
-    if (distanceToPlayer <= 1.7)
+    if (distanceToPlayer <= 1.8)
     {
       return true;
     }
