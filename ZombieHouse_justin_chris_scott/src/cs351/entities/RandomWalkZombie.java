@@ -139,7 +139,9 @@ public class RandomWalkZombie extends Zombie
       if (((Player) engine.getWorld().getPlayer()).attacking() && isAttackable())
       {
         currentHealth -= 150.0 * deltaSeconds;
-       System.out.println("ATTACK SUCCESSFUL");
+        System.out.println("ATTACK SUCCESSFUL");
+        engine.getSoundEngine().queueSoundAtLocation("sound/attacked.wav", getLocation().getX()-directionXY.getX(),
+                getLocation().getY()-directionXY.getY());
         setLocation((getLocation().getX()-directionXY.getX()),getLocation().getY()-directionXY.getY());
         playerMet = true;
         if(zombieMemory)

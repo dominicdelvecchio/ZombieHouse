@@ -416,7 +416,8 @@ public class ZombieHouseEngine implements Engine
       //Sound for player's death
       getSoundEngine().queueSoundAtLocation(deathSound,
               getWorld().getPlayer().getLocation().getX(), getWorld().getPlayer().getLocation().getY());
-      System.out.println(getWorld().getPlayer().getLocation().getX() + " " + getWorld().getPlayer().getLocation().getY());
+
+
       restoreZombies();
       
       for (Actor actor : ALL_ACTORS)

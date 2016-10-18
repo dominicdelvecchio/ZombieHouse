@@ -79,9 +79,11 @@ public class Player extends Actor
       stepTimerOffset = rightX > 0.0 ? rightX : -rightX;
     }
     stepSoundTimer += baseSpeed * stepTimerOffset * deltaSeconds;
+
     if(stepSoundTimer > 1.0)
     {
       stepSoundTimer = 0.0;
+
       double stepLocX, stepLocY;
       double multiplier;
       if(rightFoot)
@@ -96,28 +98,24 @@ public class Player extends Actor
 
       stepLocX = getLocation().getX() + multiplier * rightDirection.getX();
       stepLocY = getLocation().getY() + multiplier * rightDirection.getY();
+
       if(isRunning)
       {
-        //engine.getSoundEngine().queueSoundAtLocation("sound/footstep_running.wav", stepLocX, stepLocY);
         engine.getSoundEngine().queueSoundAtLocation("sound/footstep_walk.wav", stepLocX, stepLocY, 4.0, 0.9);
       }
       else
       {
         engine.getSoundEngine().queueSoundAtLocation("sound/footstep_walk.wav", stepLocX, stepLocY, 3.0, 0.6);
       }
-
-
-      //engine.getSoundEngine().queueSoundAtLocation("sound/zombie_low.wav", getLocation().getX(), getLocation().getY());
     }
 
     lastAttack += deltaSeconds;
-//    System.out.println("shouldAttack = " + shouldAttack + ", lastAttack = " + lastAttack);
     if(lastAttack >= .1){
       if(shouldAttack)
       {
         isAttacking = true;
         lastAttack = 0.0;
-      }
+       }
     }
     else{
       shouldAttack = false;

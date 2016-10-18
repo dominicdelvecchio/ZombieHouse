@@ -112,6 +112,9 @@ public class MasterZombie extends Zombie {
       currentHealth -= 150.0 * deltaSeconds;
       //attackCount++;
       System.out.println("ATTACK SUCCESSFUL");
+
+      engine.getSoundEngine().queueSoundAtLocation("sound/attacked.wav", getLocation().getX()- xDirection,
+              getLocation().getY()- yDirection);
       setLocation(getLocation().getX()- xDirection,getLocation().getY()-yDirection);
       playerMet = true;
       if(zombieMemory)
