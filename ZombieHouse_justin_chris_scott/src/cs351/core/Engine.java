@@ -1,5 +1,6 @@
 package cs351.core;
 
+import cs351.entities.Player;
 import javafx.stage.Stage;
 
 import java.util.Collection;
@@ -143,4 +144,5 @@ public interface Engine
   void frame();
   
   
+  public void bifurcate(Actor actor);
 }

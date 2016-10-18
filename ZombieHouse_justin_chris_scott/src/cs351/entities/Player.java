@@ -4,6 +4,7 @@ import cs351.core.Actor;
 import cs351.core.Engine;
 import cs351.core.Vector3;
 import cs351.core.KeyboardInput;
+import cs351.project1.ZombieHouseEngine;
 
 /**
  * Main player class. Has bindings for different control functions.
@@ -110,7 +111,7 @@ public class Player extends Actor
     }
 
     lastAttack += deltaSeconds;
-    if(lastAttack >= .05){
+    if(lastAttack >= .2){
       if(shouldAttack)
       {
         isAttacking = true;
@@ -119,7 +120,7 @@ public class Player extends Actor
     }
     else{
       shouldAttack = false;
-      if(lastAttack < .05){
+      if(lastAttack < .2){
         isAttacking = false;
       }
     }
@@ -134,20 +135,33 @@ public class Player extends Actor
 
   public void collided(Engine engine, Actor actor)
   {
-    if(actor instanceof Zombie)
+    if (actor instanceof Zombie)
     {
-      if(currentHealth > 5)
+      if (currentHealth > 5)
       {
         engine.getSoundEngine().queueSoundAtLocation("sound/zombie_eat.wav", getLocation().getX(),
                 getLocation().getY(), 6.0, 1.0);
       }
       ((Zombie) actor).playerMet = true;
       //((Zombie) actor).zombieMemory =true;
-      if(!((Zombie) actor).zombieMemory)
+      if (!((Zombie) actor).zombieMemory)
       {
         ++numAttackingZombies;
       }
+      if (((Zombie) actor).zombieMemory)
+      {
+        ((Zombie) actor).setShouldBifurcate(true);
+      }
+    
+  
+    if (((Zombie) actor).getShouldBifurcate() && !((Zombie) actor).getHasBifurcated())
+    {
+       engine.bifurcate(this);
+      ((Zombie) actor).setShouldBifurcate(false);
+      ((Zombie) actor).setHasBifurcated(true);
+      ((Zombie) actor).setNoClip(true);
     }
+  }
   }
 
   public void attack()

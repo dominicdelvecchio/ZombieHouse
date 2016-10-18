@@ -273,6 +273,7 @@ public class Zombie extends Actor
       move = 0;
       zombieMemory = true;
       hasBifurcated = false;
+      noClip = false;
     }
   }
   
@@ -280,6 +281,23 @@ public class Zombie extends Actor
   {
     setLocation(zombieMapX.get(move), zombieMapY.get(move));
     move++;
+  }
+  
+  public boolean getHasBifurcated()
+  {
+    return hasBifurcated;
+  }
+  public boolean getShouldBifurcate()
+  {
+    return shouldBifurcate;
+  }
+  public void setHasBifurcated(boolean bifurcate)
+  {
+    hasBifurcated = bifurcate;
+  }
+  public void setShouldBifurcate(boolean bifurcate)
+  {
+    shouldBifurcate = bifurcate;
   }
   
 }
