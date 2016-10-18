@@ -101,7 +101,7 @@ public class MasterZombie extends Zombie {
     {
       System.out.println("ATTACK SUCCESSFUL");
 
-      engine.getSoundEngine().queueSoundAtLocation("sound/attacked.wav", getLocation().getX()- xDirection,
+      engine.getSoundEngine().queueSoundAtLocation("sound/attack.wav", getLocation().getX()- xDirection,
               getLocation().getY()- yDirection,4.0,1);
       setLocation(getLocation().getX()- xDirection,getLocation().getY()-yDirection);
       playerMet = true;

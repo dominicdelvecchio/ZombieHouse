@@ -137,7 +137,8 @@ public class Player extends Actor
     if(actor instanceof Zombie)
     {
 
-      engine.getSoundEngine().queueSoundAtLocation("sound/attackedplayer.wav", 10,10);
+      engine.getSoundEngine().queueSoundAtLocation("sound/attacked_player.wav", getLocation().getX(),
+              getLocation().getY(), 6.0, 1.0);
       ((Zombie) actor).playerMet = true;
       //((Zombie) actor).zombieMemory =true;
       if(!((Zombie) actor).zombieMemory)
