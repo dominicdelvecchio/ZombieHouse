@@ -251,4 +251,5 @@ public class Player extends Actor
     setRightSpeedX(rightX);
     setRightSpeedY(rightY);
   }
+  
 }

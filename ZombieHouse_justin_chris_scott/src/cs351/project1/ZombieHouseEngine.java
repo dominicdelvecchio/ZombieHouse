@@ -39,7 +39,7 @@ public class ZombieHouseEngine implements Engine
   int ghostMovement1 = 0;
   int ghostMovement2 = 0;
   int ghostMovement3 = 0;
-  private int frameCount = 0;
+  private int playerLives = 3;
   private String deathSound = "sound/death.wav";
 
   
@@ -430,6 +430,12 @@ public class ZombieHouseEngine implements Engine
           ((Zombie) actor).resetZombie();
         }
       }
+      if(playerLives <= 0)
+      {
+        System.out.println("GAME OVER");
+        isPendingShutdown = true;
+      }
+      else {playerLives--;}
       initEngineFromWorld(false);
       pendingLevelRestart = false;
     }
