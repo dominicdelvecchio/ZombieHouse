@@ -101,11 +101,11 @@ public class Player extends Actor
 
       if(isRunning)
       {
-        engine.getSoundEngine().queueSoundAtLocation("sound/footstep_running.wav", stepLocX, stepLocY, 6.0, 0.9);
+        engine.getSoundEngine().queueSoundAtLocation("sound/footstep_running.wav", stepLocX, stepLocY, 4.0, 0.9);
       }
       else
       {
-        engine.getSoundEngine().queueSoundAtLocation("sound/footstep_walk.wav", stepLocX, stepLocY, 4.0, 0.7);
+        engine.getSoundEngine().queueSoundAtLocation("sound/footstep_walk.wav", stepLocX, stepLocY, 2.0, 0.7);
       }
     }
 
@@ -136,6 +136,8 @@ public class Player extends Actor
   {
     if(actor instanceof Zombie)
     {
+
+      engine.getSoundEngine().queueSoundAtLocation("sound/attackedplayer.wav", 10,10);
       ((Zombie) actor).playerMet = true;
       //((Zombie) actor).zombieMemory =true;
       if(!((Zombie) actor).zombieMemory)
