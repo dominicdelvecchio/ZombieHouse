@@ -273,6 +273,7 @@ public class ZombieHouseEngine implements Engine
       // start off assuming each location can be visited
       Arrays.fill(pathingData[x], false);
     }
+    
   }
 
   @Override
@@ -317,6 +318,7 @@ public class ZombieHouseEngine implements Engine
     //ghostMapX.add(getWorld().getPlayer().getLocation().getX());
     //ghostMapY.add(getWorld().getPlayer().getLocation().getY());
     monitorGhost(ghostCount);
+    //masterZombieLocator();
     //ghostMovement++;
     for (Actor actor : UPDATE_ACTORS)
     {
@@ -520,7 +522,7 @@ public class ZombieHouseEngine implements Engine
               actor.getLocation().getY()+0.1,
               actor.getWidth(), actor.getHeight(), actor.getDepth());
     }
-    else if(actor instanceof RandomWalkZombie){
+    else if(actor instanceof RandomWalkZombie || actor instanceof MasterZombie){
       zombie = new RandomWalkZombie("textures/metal_texture.jpg",
               "resources/Zombie2_Animated.txt",
               actor.getLocation().getX()+0.1,
@@ -540,8 +542,15 @@ public class ZombieHouseEngine implements Engine
       renderer.mapTextureToActor("textures/metal_texture.jpg", zombie);
     }
   }
-  public int getFrameCount()
+  public void masterZombieLocator()
   {
-    return frameCount;
+    double mx = getWorld().getMasterZombie().getLocation().getX();
+    double my = getWorld().getMasterZombie().getLocation().getY();
+    double px = getWorld().getPlayer().getLocation().getX();
+    double py = getWorld().getPlayer().getLocation().getY();
+    double x = mx -px;
+    double y = my - py;
+   System.out.println("X = " + x + " Y = " + y);
+    
   }
 }

@@ -40,7 +40,7 @@ public class Zombie extends Actor
   protected boolean zombieHasDied = false;
   protected int movement = 0;
   protected int move = 0;
-  int attackCount=0;
+  
   
 
   public Zombie(String textureFile, double x, double y, int width, int height, int depth)
@@ -268,7 +268,7 @@ public class Zombie extends Actor
   }
 
   protected boolean tooClose(){
-    if(distanceToPlayer > 2){
+    if(distanceToPlayer > 10){
       return false;
     }
     else return true;
@@ -295,7 +295,6 @@ public class Zombie extends Actor
       move = 0;
       zombieMemory = true;
       hasBifurcated = false;
-      attackCount = 0;
     }
   }
   

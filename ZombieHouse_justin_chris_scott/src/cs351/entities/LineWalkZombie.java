@@ -130,8 +130,7 @@ public class LineWalkZombie extends Zombie
       if(((Player) engine.getWorld().getPlayer()).attacking() && isAttackable())
       {
         currentHealth -= 150.0 * deltaSeconds;
-        attackCount++;
-        System.out.println("ATTACK SUCCESSFUL" +attackCount);
+        System.out.println("ATTACK SUCCESSFUL");
         setLocation(getLocation().getX()- xDirection,getLocation().getY()-yDirection);
         playerMet = true;
         if(zombieMemory)
@@ -143,7 +142,7 @@ public class LineWalkZombie extends Zombie
       if(shouldBifurcate && !hasBifurcated)
       {
         ((ZombieHouseEngine) engine).bifurcate(this);
-        System.out.println("Bifurcate");
+        //System.out.println("Bifurcate");
         shouldBifurcate = false;
         hasBifurcated = true;
         
