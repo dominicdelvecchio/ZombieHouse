@@ -110,7 +110,7 @@ public class Player extends Actor
     }
 
     lastAttack += deltaSeconds;
-    if(lastAttack >= .1){
+    if(lastAttack >= .05){
       if(shouldAttack)
       {
         isAttacking = true;
@@ -119,7 +119,7 @@ public class Player extends Actor
     }
     else{
       shouldAttack = false;
-      if(lastAttack < .1){
+      if(lastAttack < .05){
         isAttacking = false;
       }
     }
