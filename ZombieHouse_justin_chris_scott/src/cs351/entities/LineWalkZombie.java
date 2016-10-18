@@ -7,7 +7,6 @@ package cs351.entities;
  */
 
 import java.util.Random;
-
 import cs351.core.Engine;
 import cs351.core.GlobalConstants;
 import javafx.geometry.Point2D;
@@ -86,10 +85,6 @@ public class LineWalkZombie extends Zombie
             // alert the master zombie
             ((MasterZombie) engine.getWorld().getMasterZombie()).detectPlayer();
           }
-          /*
-          bifurcate here using:
-          ((ZombieHouseEngine) engine).bifurcate(this);
-          */
         }
 
         playerDistance(engine);
@@ -140,14 +135,12 @@ public class LineWalkZombie extends Zombie
           shouldBifurcate = true;
         }
       }
-  
+
       if(shouldBifurcate && !hasBifurcated)
       {
         ((ZombieHouseEngine) engine).bifurcate(this);
-        //System.out.println("Bifurcate");
         shouldBifurcate = false;
         hasBifurcated = true;
-        
       }
 
       if(currentHealth <= 0)

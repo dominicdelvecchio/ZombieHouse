@@ -12,8 +12,6 @@ import cs351.core.GlobalConstants;
 import cs351.core.Vector3;
 import cs351.project1.ZombieHouseEngine;
 import javafx.geometry.Point2D;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Random;
 
 public class RandomWalkZombie extends Zombie
@@ -24,7 +22,7 @@ public class RandomWalkZombie extends Zombie
   private double xDirection = 0;
   private double yDirection = 0;
   private Vector3 directionXY = new Vector3(0.0);
-  
+
 
   public RandomWalkZombie(String textureFile, double x, double y, int width, int height, int depth)
   {
@@ -49,7 +47,7 @@ public class RandomWalkZombie extends Zombie
     {
       if(!zombieMemory)
       {
-  
+
       elapsedSeconds += deltaSeconds;
       double zombieSpeed = Double.parseDouble(engine.getSettings().getValue("zombie_speed"));
       // every zombieDecisionRate seconds, switch direction
@@ -104,38 +102,31 @@ public class RandomWalkZombie extends Zombie
           directionXY.set(xDirection, yDirection, 0.0);
           ((MasterZombie) engine.getWorld().getMasterZombie()).detectPlayer();
         }
-          /*
-          bifurcate here using:
-          ((ZombieHouseEngine) engine).bifurcate(this);
-          */
       }
-  
+
       playerDistance(engine);
-  
+
       if (canSmellPlayer())
       {
-  
-        //if(!playerMet){zombieTime = currentTime;}
-        //playerMet = true;
         lookAt(engine.getWorld().getPlayer().getLocation().getX(), engine.getWorld().getPlayer().getLocation().getY());
       }
-  
+
       double totalSpeed = zombieSpeed * deltaSeconds;
       setLocation(getLocation().getX() + directionXY.getX() * totalSpeed,
               getLocation().getY() + directionXY.getY() * totalSpeed);
-  
+
       recordZombie();
     }
     else if(move < movement) {moveZombiePast();}
       else if(zombieHasDied) {((ZombieHouseEngine) engine).killZombie(this);}
       else{zombieMemory=false;}
-      
+
       if (startingHealth < 0.0)
       {
         startingHealth = zombieHealth;
         currentHealth = startingHealth;
       }
-  
+
       if (((Player) engine.getWorld().getPlayer()).attacking() && isAttackable())
       {
         currentHealth -= 150.0 * deltaSeconds;
@@ -147,8 +138,7 @@ public class RandomWalkZombie extends Zombie
         if(zombieMemory)
         {
           shouldBifurcate = true;
-          
-        }
+       }
         //zombieMemory = true;
       }
       if(shouldBifurcate && !hasBifurcated)
@@ -158,19 +148,17 @@ public class RandomWalkZombie extends Zombie
         shouldBifurcate = false;
         hasBifurcated = true;
       }
-  
+
       if (currentHealth <= 0)
       {
         ((ZombieHouseEngine) engine).killZombie(this);
         zombieHasDied = true;
       }
-      
+
       checkPlaySound(engine, deltaSeconds);
     }
     return UpdateResult.UPDATE_COMPLETED;
   }
-  
-    
   }
   
 

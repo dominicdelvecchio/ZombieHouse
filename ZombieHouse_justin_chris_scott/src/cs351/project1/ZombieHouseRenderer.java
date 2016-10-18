@@ -488,20 +488,10 @@ public class ZombieHouseRenderer implements Renderer
     else setTranslationValuesForModel(model, actor.getLocation().getX(),
                                       actorHeightOffset,
                                       actor.getLocation().getY());
-/*    final PhongMaterial greenMaterial = new PhongMaterial();
-    greenMaterial.setDiffuseColor(Color.GREEN);
-    greenMaterial.setSpecularColor(Color.LIGHTGREEN);
-    Box healthBox = new Box(2, 2, 2);
-    healthBox.setMaterial(greenMaterial);
-    healthBox.setTranslateX(actor.getLocation().getX());
-    healthBox.setTranslateY(actor.getLocation().getY());
-    healthBox.setTranslateZ(actor.getLocation().getZ());*/
     if (model.shape != null)
     {
       model.shape.setDrawMode(mode);
       RENDER_FRAME.add(model.shape);
-//      RENDER_FRAME.add(healthBox);
-      //renderSceneGraph.getChildren().add(model.shape);
     }
     else
     {
@@ -510,8 +500,6 @@ public class ZombieHouseRenderer implements Renderer
       model.currMeshView.setDrawMode(mode);
       model.currMeshView.setCullFace(CullFace.BACK);
       RENDER_FRAME.add(model.currMeshView);
-//      RENDER_FRAME.add(healthBox);
-      //renderSceneGraph.getChildren().add(model.currMeshView);
     }
   }
 

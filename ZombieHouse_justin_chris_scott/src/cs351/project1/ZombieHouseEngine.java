@@ -361,6 +361,10 @@ public class ZombieHouseEngine implements Engine
     initEngineState();
   }
 
+  /**
+   * Schedule the current zombie to be killed next frame
+   * @param actor The zombie to be killed
+   */
   public void killZombie(Actor actor)
   {
     KILLED_ACTORS.add(actor);
@@ -514,6 +518,14 @@ public class ZombieHouseEngine implements Engine
     }
   }
 
+  /**
+   *  Bifurcates an engaged zombie so the new zombie can attack the player,
+   *  only called if the engaged zombie is attacked by the current player
+   *
+   *  @param actor The zombie to be bifurcated, only used on LineWalkZombie
+   *               and RandomWalkZombie, MasterZombie is immortal and should
+   *               not bifurcate
+   */
   public void bifurcate(Actor actor){
     Zombie zombie = null;
     if(actor instanceof LineWalkZombie){
@@ -523,7 +535,7 @@ public class ZombieHouseEngine implements Engine
               actor.getLocation().getY()+0.1,
               actor.getWidth(), actor.getHeight(), actor.getDepth());
     }
-    else if(actor instanceof RandomWalkZombie || actor instanceof MasterZombie){
+    else if(actor instanceof RandomWalkZombie){
       zombie = new RandomWalkZombie("textures/metal_texture.jpg",
               "resources/Zombie2_Animated.txt",
               actor.getLocation().getX()+0.1,
@@ -542,16 +554,5 @@ public class ZombieHouseEngine implements Engine
     else if(zombie instanceof RandomWalkZombie){
       renderer.mapTextureToActor("textures/metal_texture.jpg", zombie);
     }
-  }
-  public void masterZombieLocator()
-  {
-    double mx = getWorld().getMasterZombie().getLocation().getX();
-    double my = getWorld().getMasterZombie().getLocation().getY();
-    double px = getWorld().getPlayer().getLocation().getX();
-    double py = getWorld().getPlayer().getLocation().getY();
-    double x = mx -px;
-    double y = my - py;
-   System.out.println("X = " + x + " Y = " + y);
-    
   }
 }
