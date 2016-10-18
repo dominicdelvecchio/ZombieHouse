@@ -101,11 +101,11 @@ public class Player extends Actor
 
       if(isRunning)
       {
-        engine.getSoundEngine().queueSoundAtLocation("sound/footstep_walk.wav", stepLocX, stepLocY, 4.0, 0.9);
+        engine.getSoundEngine().queueSoundAtLocation("sound/footstep_running.wav", stepLocX, stepLocY, 6.0, 1.0);
       }
       else
       {
-        engine.getSoundEngine().queueSoundAtLocation("sound/footstep_walk.wav", stepLocX, stepLocY, 3.0, 0.6);
+        engine.getSoundEngine().queueSoundAtLocation("sound/footstep_walk.wav", stepLocX, stepLocY, 2.0, 0.7);
       }
     }
 
