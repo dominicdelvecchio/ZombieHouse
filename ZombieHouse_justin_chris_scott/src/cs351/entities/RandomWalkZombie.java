@@ -138,9 +138,24 @@ public class RandomWalkZombie extends Zombie
   
       if (((Player) engine.getWorld().getPlayer()).attacking() && isAttackable())
       {
-        currentHealth -= 75.0 * deltaSeconds;
+        currentHealth -= 150.0 * deltaSeconds;
+        attackCount++;
+        System.out.println("ATTACK SUCCESSFUL" + attackCount);
+        setLocation((getLocation().getX()-directionXY.getX()),getLocation().getY()-directionXY.getY());
         playerMet = true;
+        if(zombieMemory)
+        {
+          shouldBifurcate = true;
+          
+        }
         //zombieMemory = true;
+      }
+      if(shouldBifurcate && !hasBifurcated)
+      {
+        ((ZombieHouseEngine) engine).bifurcate(this);
+        System.out.println("Bifurcate");
+        shouldBifurcate = false;
+        hasBifurcated = true;
       }
   
       if (currentHealth <= 0)
