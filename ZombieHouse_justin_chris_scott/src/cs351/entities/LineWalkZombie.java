@@ -127,7 +127,7 @@ public class LineWalkZombie extends Zombie
         currentHealth -= 150.0 * deltaSeconds;
         System.out.println("ATTACK SUCCESSFUL");
         engine.getSoundEngine().queueSoundAtLocation("sound/attack.wav", getLocation().getX()- xDirection,
-                getLocation().getY()- yDirection);
+                getLocation().getY()- yDirection,4.0,1);
         setLocation(getLocation().getX()- xDirection,getLocation().getY()-yDirection);
         playerMet = true;
         if(zombieMemory)
